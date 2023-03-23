@@ -1,0 +1,14 @@
+syntax = "proto3";
+package screenshot;
+
+import "google/protobuf/empty.proto";
+
+service ScreenshotHandler {
+  rpc Primary(google.protobuf.Empty) returns (Screenshot);
+}
+
+message Screenshot {
+  uint32 width = 1;
+  uint32 height = 2;
+  bytes image = 3; // Image encoded as png
+}
