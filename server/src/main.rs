@@ -2,8 +2,8 @@ use anyhow::Result;
 use screenshots::{DisplayInfo, Screen};
 use tonic::{Request, Response, Status};
 use tonic::transport::Server;
-use info_proto::screenshot::Screenshot;
-use info_proto::screenshot::screenshot_handler_server::{ScreenshotHandler, ScreenshotHandlerServer};
+use mshot_proto::screenshot::Screenshot;
+use mshot_proto::screenshot::screenshot_handler_server::{ScreenshotHandler, ScreenshotHandlerServer};
 
 #[derive(Debug, Default)]
 struct ScreenshotProvider;

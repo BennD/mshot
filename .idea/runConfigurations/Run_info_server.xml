@@ -1,6 +1,6 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="Run info_server" type="CargoCommandRunConfiguration" factoryName="Cargo Command">
-    <option name="command" value="run --package info_server --bin info_server" />
+    <option name="command" value="run --package mshot_server --bin mshot_server" />
     <option name="workingDirectory" value="file://$PROJECT_DIR$" />
     <option name="emulateTerminal" value="false" />
     <option name="channel" value="DEFAULT" />

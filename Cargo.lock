@@ -468,37 +468,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "info_client"
-version = "0.1.0"
-dependencies = [
- "info_proto",
- "prost",
- "tokio",
- "tonic",
-]
-
-[[package]]
-name = "info_proto"
-version = "0.1.0"
-dependencies = [
- "prost",
- "tonic",
- "tonic-build",
-]
-
-[[package]]
-name = "info_server"
-version = "0.1.0"
-dependencies = [
- "anyhow",
- "info_proto",
- "prost",
- "screenshots",
- "tokio",
- "tonic",
-]
-
-[[package]]
 name = "instant"
 version = "0.1.12"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -606,6 +575,37 @@ dependencies = [
  "log",
  "wasi",
  "windows-sys 0.45.0",
+]
+
+[[package]]
+name = "mshot_client"
+version = "0.1.0"
+dependencies = [
+ "mshot_proto",
+ "prost",
+ "tokio",
+ "tonic",
+]
+
+[[package]]
+name = "mshot_proto"
+version = "0.1.0"
+dependencies = [
+ "prost",
+ "tonic",
+ "tonic-build",
+]
+
+[[package]]
+name = "mshot_server"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "mshot_proto",
+ "prost",
+ "screenshots",
+ "tokio",
+ "tonic",
 ]
 
 [[package]]

@@ -1,5 +1,5 @@
 use std::fs;
-use info_proto::screenshot::screenshot_handler_client::ScreenshotHandlerClient;
+use mshot_proto::screenshot::screenshot_handler_client::ScreenshotHandlerClient;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
