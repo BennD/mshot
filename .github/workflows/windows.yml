@@ -9,6 +9,7 @@ jobs:
   windows:
     runs-on: windows-latest
     steps:
+    - uses: arduino/setup-protoc@v1
     - uses: actions/checkout@v3
     - name: Build
       run: cargo build --all --verbose --release
