@@ -43,4 +43,6 @@ jobs:
     - uses: actions/upload-artifact@v3
       with:
         name: ${{ runner.os }}
-        path: target/*/mshot_.*(?<!\.d)$
+        path: |
+          target/*/mshot_.*
+          !**/*.d
