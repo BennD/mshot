@@ -6,14 +6,44 @@ env:
   CARGO_TERM_COLOR: always
 
 jobs:
-  windows:
-    runs-on: windows-latest
+  build:
+    name: Build (${{ matrix.os }} , ${{ matrix.rust }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, linux-latest, macos-latest]
+        rust: [stable]
+    env:
+      RUST_BACKTRACE: full
+      #RUSTC_WRAPPER: sccache
+      RUSTV: ${{ matrix.rust }}
+      #SCCACHE_CACHE_SIZE: 2G
+      #SCCACHE_DIR: ${{ matrix.sccache-path }}
+      # SCCACHE_RECACHE: 1 # Uncomment this to clear cache, then comment it back out
     steps:
-    - uses: arduino/setup-protoc@v1
     - uses: actions/checkout@v3
+    - name: Install protoc
+      uses: arduino/setup-protoc@v1      
+    - name: Install Rust ${{ matrix.rust }}
+      uses: actions-rs/toolchain@v1
+      with:
+        toolchain: ${{ matrix.rust }}
+        profile: minimal
+        override: true
+    - name: Cache cargo registry
+      uses: actions/cache@v2
+      continue-on-error: false
+      with:
+        path: |
+          ~/.cargo/registry
+          ~/.cargo/git            
+        key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+        restore-keys: |
+                      ${{ runner.os }}-cargo-
     - name: Build
       run: cargo build --all --verbose --release
     - uses: actions/upload-artifact@v3
       with:
         name: executables
-        path: target/**/*.exe
+        path: target/*/*.exe
