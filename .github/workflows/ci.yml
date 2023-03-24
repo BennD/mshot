@@ -37,10 +37,10 @@ jobs:
     - name: Rust Cache
       uses: Swatinem/rust-cache@v2.2.1
       with:
-        shared-key: ${{ runner.os }}-${{ matrix.rust }}
+        shared-key: ${{ runner.os }}-${{ matrix.rust }}-${{ hashFiles('**/Cargo.lock') }}
     - name: Build
       run: cargo build --all --verbose --release
     - uses: actions/upload-artifact@v3
       with:
         name: ${{ runner.os }}
-        path: target/*/mshot_*
+        path: target/*/mshot_.*(?<!\.d)$
