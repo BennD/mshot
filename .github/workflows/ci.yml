@@ -43,12 +43,10 @@ jobs:
         path: |
           ~/.cargo/registry
           ~/.cargo/git            
-        key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
-        restore-keys: |
-                      ${{ runner.os }}-cargo-
+        key: ${{ runner.os }}-cargo
     - name: Build
       run: cargo build --all --verbose --release
     - uses: actions/upload-artifact@v3
       with:
-        name: executables
-        path: target/*/*.exe
+        name: ${{ runner.os }}
+        path: target/*/*
