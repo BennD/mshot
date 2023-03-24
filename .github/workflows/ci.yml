@@ -16,11 +16,7 @@ jobs:
         rust: [stable]
     env:
       RUST_BACKTRACE: full
-      #RUSTC_WRAPPER: sccache
       RUSTV: ${{ matrix.rust }}
-      #SCCACHE_CACHE_SIZE: 2G
-      #SCCACHE_DIR: ${{ matrix.sccache-path }}
-      # SCCACHE_RECACHE: 1 # Uncomment this to clear cache, then comment it back out
     steps:
     - uses: actions/checkout@v3
     - name: Install protoc
@@ -38,14 +34,10 @@ jobs:
         toolchain: ${{ matrix.rust }}
         profile: minimal
         override: true
-    - name: Cache cargo registry
-      uses: actions/cache@v2
-      continue-on-error: false
+    - name: Rust Cache
+      uses: Swatinem/rust-cache@v2.2.1
       with:
-        path: |
-          ~/.cargo/registry
-          ~/.cargo/git            
-        key: ${{ runner.os }}-cargo
+        shared-key: ${{ runner.os }}-${{ matrix.rust }}
     - name: Build
       run: cargo build --all --verbose --release
     - uses: actions/upload-artifact@v3
