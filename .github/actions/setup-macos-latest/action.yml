@@ -1,0 +1,8 @@
+name: setup-macos-latest
+description: Setup runner (macos)
+runs:
+  using: "composite"
+  steps:
+    - shell: bash
+      run: |
+        echo "Nothing to do"

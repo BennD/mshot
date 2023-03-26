@@ -1,0 +1,37 @@
+name: setup
+description: Setup runner
+
+inputs:
+  repo-token:
+    description: 'The GITHUB_TOKEN secret'
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - name: Setup ubuntu-latest
+      if: matrix.os == 'ubuntu-latest'
+      uses: ./.github/actions/setup-ubuntu-latest
+    - name: Setup windows-latest
+      if: matrix.os == 'windows-latest'
+      uses: ./.github/actions/setup-windows-latest
+    - name: Setup macos-latest
+      if: matrix.os == 'macos-latest'
+      uses: ./.github/actions/setup-macos-latest
+
+    - name: Install protoc
+      uses: arduino/setup-protoc@v1
+      with:
+        repo-token: ${{ inputs.repo-token }}
+
+    - name: Install rust ${{ matrix.rust }}
+      uses: actions-rs/toolchain@v1
+      with:
+        toolchain: ${{ matrix.rust }}
+        profile: minimal
+        override: true
+
+    - name: Setup rust cache
+      uses: Swatinem/rust-cache@v2.2.1
+      with:
+        shared-key: ${{ matrix.os }}-${{ matrix.rust }}-${{ hashFiles('**/Cargo.lock') }}

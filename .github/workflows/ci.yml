@@ -17,30 +17,21 @@ jobs:
         rust: [stable]
     env:
       RUSTV: ${{ matrix.rust }}
+
     steps:
-    - uses: actions/checkout@v3
-    - name: Install protoc
-      uses: arduino/setup-protoc@v1
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - name: Setup runner
+      uses: ./.github/actions/setup
       with:
         repo-token: ${{ secrets.GITHUB_TOKEN }}
-    - name: Setup ubuntu deps
-      if: matrix.os == 'ubuntu-latest'
-      uses: daaku/gh-action-apt-install@v4
-      with:
-        packages: libdbus-1-dev
-    - name: Install Rust ${{ matrix.rust }}
-      uses: actions-rs/toolchain@v1
-      with:
-        toolchain: ${{ matrix.rust }}
-        profile: minimal
-        override: true
-    - name: Rust Cache
-      uses: Swatinem/rust-cache@v2.2.1
-      with:
-        shared-key: ${{ runner.os }}-${{ matrix.rust }}-${{ hashFiles('**/Cargo.lock') }}
+
     - name: Build
       run: cargo build --all --verbose --release
-    - uses: actions/upload-artifact@v3
+
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v3
       with:
         name: ${{ runner.os }}
         if-no-files-found: error
