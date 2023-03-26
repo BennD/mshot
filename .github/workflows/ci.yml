@@ -25,6 +25,8 @@ jobs:
         uses: ./.github/actions/setup
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
+          os: ${{ matrix.os }}
+          rust: ${{ matrix.rust }}
           restore-only: 'false'
 
       - name: Build
@@ -33,11 +35,12 @@ jobs:
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: ${{ runner.os }}
+          name: ${{ matrix.os }}
           if-no-files-found: error
           path: |
             target/*/mshot_*
             !**/*.d
+
 
   test:
     name: Test (${{ matrix.os }}|${{ matrix.rust }})
@@ -58,20 +61,17 @@ jobs:
         uses: ./.github/actions/setup
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
+          os: ${{ matrix.os }}
+          rust: ${{ matrix.rust }}
 
       - name: Test
         run: cargo test --all --verbose --release
 
-  clippy:
-    name: Clippy (${{ matrix.os }}|${{ matrix.rust }})
-    needs: build
-    runs-on: ${{ matrix.os }}
 
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [ ubuntu-latest, windows-latest, macos-latest ]
-        rust: [ stable ]
+  clippy:
+    name: Clippy
+    needs: build
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout
@@ -85,16 +85,11 @@ jobs:
       - name: Clippy
         run: cargo clippy --all --verbose --release
 
-  fmt:
-    name: Fmt (${{ matrix.os }}|${{ matrix.rust }})
-    needs: build
-    runs-on: ${{ matrix.os }}
 
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [ ubuntu-latest, windows-latest, macos-latest ]
-        rust: [ stable ]
+  fmt:
+    name: Fmt
+    needs: build
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout
