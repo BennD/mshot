@@ -24,6 +24,7 @@ jobs:
       uses: ./.github/actions/setup
       with:
         repo-token: ${{ secrets.GITHUB_TOKEN }}
+        os: ${{ matrix.os }}
     - name: Build
       run: cargo build --all --verbose --release
     - name: Upload artifacts

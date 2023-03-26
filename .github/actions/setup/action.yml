@@ -5,16 +5,19 @@ inputs:
   repo-token:
     description: 'The GITHUB_TOKEN secret'
     required: true
+  os:
+    description: 'The OS to setup'
+    required: true
 
 runs:
   using: "composite"
   steps:
     - name: Setup ${{ matrix.os }}
-      uses: ./.github/actions/setup-${{ matrix.os }}
+      uses: ./.github/actions/setup-${{ inputs.os }}
     - name: Install protoc
       uses: arduino/setup-protoc@v1
       with:
-        repo-token: ${{ repo-token }}
+        repo-token: ${{ inputs.repo-token }}
     - name: Install rust ${{ matrix.rust }}
       uses: actions-rs/toolchain@v1
       with:
