@@ -1,5 +1,5 @@
-name: setup-linux
-description: Setup runner (linux)
+name: setup-ubuntu-latest
+description: Setup runner (ubuntu)
 runs:
   using: "composite"
   steps:

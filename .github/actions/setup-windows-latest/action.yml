@@ -1,0 +1,8 @@
+name: setup-windows-latest
+description: Setup runner (windows)
+runs:
+  using: "composite"
+  steps:
+    - shell: powershell
+      run: |
+        echo "Nothing to do"
