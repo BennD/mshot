@@ -5,22 +5,32 @@ inputs:
   repo-token:
     description: 'The GITHUB_TOKEN secret'
     required: true
+  restore-only:
+    description: 'Only restore cache'
+    required: false
+    default: 'true'
 
 runs:
   using: "composite"
-  steps:
-    - name: Setup ubuntu-latest
-      if: matrix.os == 'ubuntu-latest'
-      uses: ./.github/actions/setup-ubuntu-latest
-    - name: Setup windows-latest
-      if: matrix.os == 'windows-latest'
-      uses: ./.github/actions/setup-windows-latest
-    - name: Setup macos-latest
-      if: matrix.os == 'macos-latest'
-      uses: ./.github/actions/setup-macos-latest
 
+  steps:
     - name: Setup Cache
+      if: inputs.restore-only == 'false'
       uses: actions/cache@v3
+      with:
+        path: |
+          ~/.cargo/bin/
+          ~/.cargo/registry/index/
+          ~/.cargo/registry/cache/
+          ~/.cargo/git/db/
+          target/
+        key: ${{ matrix.os }}-cargo-${{ matrix.rust }}-${{ hashFiles('**/Cargo.lock') }}
+        restore-keys: |
+          ${{ matrix.os }}-cargo-${{ matrix.rust }}-
+
+    - name: Restore cache
+      if: inputs.restore-only == 'true'
+      uses: actions/cache/restore@v3
       with:
         path: |
           ~/.cargo/bin/
@@ -38,8 +48,17 @@ runs:
         repo-token: ${{ inputs.repo-token }}
 
     - name: Install rust ${{ matrix.rust }}
-      uses: actions-rs/toolchain@v1
+      uses: dtolnay/rust-toolchain@master
       with:
         toolchain: ${{ matrix.rust }}
-        profile: minimal
-        override: true
+        copmponents: rustfmt, clippy
+
+    - name: Setup ubuntu-latest
+      if: matrix.os == 'ubuntu-latest'
+      uses: ./.github/actions/setup-ubuntu-latest
+    - name: Setup windows-latest
+      if: matrix.os == 'windows-latest'
+      uses: ./.github/actions/setup-windows-latest
+    - name: Setup macos-latest
+      if: matrix.os == 'macos-latest'
+      uses: ./.github/actions/setup-macos-latest

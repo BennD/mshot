@@ -8,15 +8,15 @@ env:
 
 jobs:
   build:
+    id: build-${{ matrix.os }}-${{ matrix.rust }}
     name: Build (${{ matrix.os }}|${{ matrix.rust }})
     runs-on: ${{ matrix.os }}
+
     strategy:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
         rust: [stable]
-    env:
-      RUSTV: ${{ matrix.rust }}
 
     steps:
     - name: Checkout
@@ -26,6 +26,7 @@ jobs:
       uses: ./.github/actions/setup
       with:
         repo-token: ${{ secrets.GITHUB_TOKEN }}
+        restore-only: 'false'
 
     - name: Build
       run: cargo build --all --verbose --release
@@ -38,3 +39,72 @@ jobs:
         path: |
           target/*/mshot_*
           !**/*.d
+
+  test:
+    name: Test (${{ matrix.os }}|${{ matrix.rust }})
+    needs: build-${{ matrix.os }}-${{ matrix.rust }}
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        rust: [stable]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup runner
+        uses: ./.github/actions/setup
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Test
+        run: cargo test --all --verbose --release
+
+  clippy:
+    name: Clippy (${{ matrix.os }}|${{ matrix.rust }})
+    needs: build-${{ matrix.os }}-${{ matrix.rust }}
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        rust: [stable]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup runner
+        uses: ./.github/actions/setup
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Clippy
+        run: cargo clippy --all --verbose --release
+
+  fmt:
+    name: Fmt (${{ matrix.os }}|${{ matrix.rust }})
+    needs: build-${{ matrix.os }}-${{ matrix.rust }}
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        rust: [stable]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup runner
+        uses: ./.github/actions/setup
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Fmt
+        run: cargo fmt --check --all --verbose --release
