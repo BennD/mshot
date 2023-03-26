@@ -13,7 +13,7 @@ runs:
   using: "composite"
   steps:
     - name: Setup ${{ matrix.os }}
-      uses: ./.github/actions/setup-${{ inputs.os }}
+      uses: ./.github/actions/setup-${{ github.event.inputs.os }}
     - name: Install protoc
       uses: arduino/setup-protoc@v1
       with:
