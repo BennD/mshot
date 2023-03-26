@@ -8,11 +8,11 @@ env:
 
 jobs:
   build:
-    id: build-${{ matrix.os }}-${{ matrix.rust }}
     name: Build (${{ matrix.os }}|${{ matrix.rust }})
     runs-on: ${{ matrix.os }}
 
     strategy:
+      id: build-${{ matrix.os }}-${{ matrix.rust }}
       fail-fast: false
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
