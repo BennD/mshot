@@ -19,6 +19,18 @@ runs:
       if: matrix.os == 'macos-latest'
       uses: ./.github/actions/setup-macos-latest
 
+    - name: Setup Cache
+      uses: actions/cache@v2
+      with:
+        path: |
+          ~/.cargo/registry
+          ~/.cargo/git
+          target
+        key: ${{ matrix.os }}-${{ matrix.rust }}-${{ hashFiles('**/Cargo.lock') }}
+        restore-keys: |
+          ${{ matrix.os }}-${{ matrix.rust }}-
+          ${{ matrix.os }}-
+
     - name: Install protoc
       uses: arduino/setup-protoc@v1
       with:
@@ -30,8 +42,3 @@ runs:
         toolchain: ${{ matrix.rust }}
         profile: minimal
         override: true
-
-    - name: Setup rust cache
-      uses: Swatinem/rust-cache@v2.2.1
-      with:
-        shared-key: ${{ matrix.os }}-${{ matrix.rust }}-${{ hashFiles('**/Cargo.lock') }}
