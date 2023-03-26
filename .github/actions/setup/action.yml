@@ -20,16 +20,17 @@ runs:
       uses: ./.github/actions/setup-macos-latest
 
     - name: Setup Cache
-      uses: actions/cache@v2
+      uses: actions/cache@v3
       with:
         path: |
-          ~/.cargo/registry
-          ~/.cargo/git
-          target
-        key: ${{ matrix.os }}-${{ matrix.rust }}-${{ hashFiles('**/Cargo.lock') }}
+          ~/.cargo/bin/
+          ~/.cargo/registry/index/
+          ~/.cargo/registry/cache/
+          ~/.cargo/git/db/
+          target/
+        key: ${{ matrix.os }}-cargo-${{ matrix.rust }}-${{ hashFiles('**/Cargo.lock') }}
         restore-keys: |
-          ${{ matrix.os }}-${{ matrix.rust }}-
-          ${{ matrix.os }}-
+          ${{ matrix.os }}-cargo-${{ matrix.rust }}-
 
     - name: Install protoc
       uses: arduino/setup-protoc@v1
