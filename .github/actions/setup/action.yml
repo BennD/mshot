@@ -1,16 +1,16 @@
-name: setup-dependencies
-description: Setup dependencies for the project
+name: setup
+description: Setup runner
 
 runs:
   using: "composite"
   steps:
+    - name: Test Ubuntu
+      if: matrix.os == 'ubuntu-latest'
+      shell: bash
+      run: echo "ubuntu detected!"
     - name: Install dependencies (linux)
       if: runner.os == 'Linux'
-      run: |
-        echo "installing linux deps"
-      uses: daaku/gh-action-apt-install@v4
-      with:
-        packages: libdbus-1-dev
+      uses: ./.github/actions/setup-linux
     - name: Install dependencies (windows)
       shell: bash
       run: |
@@ -19,6 +19,3 @@ runs:
       shell: bash
       run: |
         echo "installing macos deps"
-    - name: Test Ubuntu
-      if: matrix.os == 'ubuntu-latest'
-      run: echo "ubuntu detected!"
