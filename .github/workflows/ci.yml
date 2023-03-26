@@ -19,6 +19,7 @@ jobs:
       RUSTV: ${{ matrix.rust }}
 
     steps:
+    - uses: actions/checkout@v3
     - name: Setup runner
       uses: ./.github/actions/setup
       with:
