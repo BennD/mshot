@@ -12,8 +12,15 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - name: Setup ${{ matrix.os }}
-      uses: ./.github/actions/setup-${{ github.event.inputs.os }}
+    - name: Setup ubuntu-latest
+      if: matrix.os == 'ubuntu-latest'
+      uses: ./.github/actions/setup-ubuntu-latest
+    - name: Setup windows-latest
+      if: matrix.os == 'windows-latest'
+      uses: ./.github/actions/setup-windows-latest
+    - name: Setup macos-latest
+      if: matrix.os == 'macos-latest'
+      uses: ./.github/actions/setup-macos-latest
     - name: Install protoc
       uses: arduino/setup-protoc@v1
       with:
