@@ -1,6 +1,11 @@
 name: setup
 description: Setup runner
 
+inputs:
+  repo-token:
+    description: 'The GITHUB_TOKEN secret'
+    required: true
+
 runs:
   using: "composite"
   steps:
@@ -17,7 +22,7 @@ runs:
     - name: Install protoc
       uses: arduino/setup-protoc@v1
       with:
-        repo-token: ${{ secrets.GITHUB_TOKEN }}
+        repo-token: ${{ inputs.repo-token }}
 
     - name: Install rust ${{ matrix.rust }}
       uses: actions-rs/toolchain@v1
@@ -29,4 +34,4 @@ runs:
     - name: Setup rust cache
       uses: Swatinem/rust-cache@v2.2.1
       with:
-        shared-key: ${{ runner.os }}-${{ matrix.rust }}-${{ hashFiles('**/Cargo.lock') }}
+        shared-key: ${{ matrix.os }}-${{ matrix.rust }}-${{ hashFiles('**/Cargo.lock') }}

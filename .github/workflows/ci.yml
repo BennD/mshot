@@ -24,6 +24,8 @@ jobs:
 
     - name: Setup runner
       uses: ./.github/actions/setup
+      with:
+        repo-token: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Build
       run: cargo build --all --verbose --release
