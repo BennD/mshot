@@ -25,7 +25,8 @@ runs:
           ~/.cargo/git/db/
           target/
         key: ${{ matrix.os }}-cargo-${{ matrix.rust }}-${{ hashFiles('**/Cargo.lock') }}
-        restore-keys: [${{ matrix.os }}-cargo-${{ matrix.rust }}-]
+        restore-keys: |
+          ${{ matrix.os }}-cargo-${{ matrix.rust }}-
 
     - name: Restore cache
       if: inputs.restore-only == 'true'
