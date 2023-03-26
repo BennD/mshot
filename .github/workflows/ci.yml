@@ -1,6 +1,6 @@
 name: Rust
 
-on: [push]
+on: [ push ]
 
 env:
   CARGO_TERM_COLOR: always
@@ -12,44 +12,43 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     strategy:
-      id: build-${{ matrix.os }}-${{ matrix.rust }}
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
-        rust: [stable]
+        os: [ ubuntu-latest, windows-latest, macos-latest ]
+        rust: [ stable ]
 
     steps:
-    - name: Checkout
-      uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
 
-    - name: Setup runner
-      uses: ./.github/actions/setup
-      with:
-        repo-token: ${{ secrets.GITHUB_TOKEN }}
-        restore-only: 'false'
+      - name: Setup runner
+        uses: ./.github/actions/setup
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          restore-only: 'false'
 
-    - name: Build
-      run: cargo build --all --verbose --release
+      - name: Build
+        run: cargo build --all --verbose --release
 
-    - name: Upload artifacts
-      uses: actions/upload-artifact@v3
-      with:
-        name: ${{ runner.os }}
-        if-no-files-found: error
-        path: |
-          target/*/mshot_*
-          !**/*.d
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ runner.os }}
+          if-no-files-found: error
+          path: |
+            target/*/mshot_*
+            !**/*.d
 
   test:
     name: Test (${{ matrix.os }}|${{ matrix.rust }})
-    needs: build-${{ matrix.os }}-${{ matrix.rust }}
+    needs: build
     runs-on: ${{ matrix.os }}
 
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
-        rust: [stable]
+        os: [ ubuntu-latest, windows-latest, macos-latest ]
+        rust: [ stable ]
 
     steps:
       - name: Checkout
@@ -65,14 +64,14 @@ jobs:
 
   clippy:
     name: Clippy (${{ matrix.os }}|${{ matrix.rust }})
-    needs: build-${{ matrix.os }}-${{ matrix.rust }}
+    needs: build
     runs-on: ${{ matrix.os }}
 
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
-        rust: [stable]
+        os: [ ubuntu-latest, windows-latest, macos-latest ]
+        rust: [ stable ]
 
     steps:
       - name: Checkout
@@ -88,14 +87,14 @@ jobs:
 
   fmt:
     name: Fmt (${{ matrix.os }}|${{ matrix.rust }})
-    needs: build-${{ matrix.os }}-${{ matrix.rust }}
+    needs: build
     runs-on: ${{ matrix.os }}
 
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
-        rust: [stable]
+        os: [ ubuntu-latest, windows-latest, macos-latest ]
+        rust: [ stable ]
 
     steps:
       - name: Checkout
