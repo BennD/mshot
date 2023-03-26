@@ -32,9 +32,9 @@ runs:
           ~/.cargo/registry/cache/
           ~/.cargo/git/db/
           target/
-        key: ${{ input.os }}-cargo-${{ input.rust }}-${{ hashFiles('**/Cargo.lock') }}
+        key: ${{ inputs.os }}-cargo-${{ inputs.rust }}-${{ hashFiles('**/Cargo.lock') }}
         restore-keys: |
-          ${{ input.os }}-cargo-${{ input.rust }}-
+          ${{ inputs.os }}-cargo-${{ inputs.rust }}-
 
     - name: Restore cache
       if: inputs.restore-only == 'true'
@@ -46,27 +46,27 @@ runs:
           ~/.cargo/registry/cache/
           ~/.cargo/git/db/
           target/
-        key: ${{ input.os }}-cargo-${{ input.rust }}-${{ hashFiles('**/Cargo.lock') }}
+        key: ${{ inputs.os }}-cargo-${{ inputs.rust }}-${{ hashFiles('**/Cargo.lock') }}
         restore-keys: |
-          ${{ input.os }}-cargo-${{ input.rust }}-
+          ${{ inputs.os }}-cargo-${{ inputs.rust }}-
 
     - name: Install protoc
       uses: arduino/setup-protoc@v1
       with:
         repo-token: ${{ inputs.repo-token }}
 
-    - name: Install rust ${{ input.rust }}
+    - name: Install rust ${{ inputs.rust }}
       uses: dtolnay/rust-toolchain@master
       with:
-        toolchain: ${{ input.rust }}
+        toolchain: ${{ inputs.rust }}
         copmponents: rustfmt, clippy
 
     - name: Setup ubuntu-latest
-      if: input.os == 'ubuntu-latest'
+      if: inputs.os == 'ubuntu-latest'
       uses: ./.github/actions/setup-ubuntu-latest
     - name: Setup windows-latest
-      if: input.os == 'windows-latest'
+      if: inputs.os == 'windows-latest'
       uses: ./.github/actions/setup-windows-latest
     - name: Setup macos-latest
-      if: input.os == 'macos-latest'
+      if: inputs.os == 'macos-latest'
       uses: ./.github/actions/setup-macos-latest
