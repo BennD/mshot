@@ -1,6 +1,6 @@
 name: Rust
 
-on: [push]
+on: [ push ]
 
 env:
   CARGO_TERM_COLOR: always
@@ -10,31 +10,94 @@ jobs:
   build:
     name: Build (${{ matrix.os }}|${{ matrix.rust }})
     runs-on: ${{ matrix.os }}
+
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
-        rust: [stable]
-    env:
-      RUSTV: ${{ matrix.rust }}
+        os: [ ubuntu-latest, windows-latest, macos-latest ]
+        rust: [ stable ]
 
     steps:
-    - name: Checkout
-      uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
 
-    - name: Setup runner
-      uses: ./.github/actions/setup
-      with:
-        repo-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Setup runner
+        uses: ./.github/actions/setup
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          os: ${{ matrix.os }}
+          rust: ${{ matrix.rust }}
+          restore-only: 'false'
 
-    - name: Build
-      run: cargo build --all --verbose --release
+      - name: Build
+        run: cargo build --all --verbose --release
 
-    - name: Upload artifacts
-      uses: actions/upload-artifact@v3
-      with:
-        name: ${{ runner.os }}
-        if-no-files-found: error
-        path: |
-          target/*/mshot_*
-          !**/*.d
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ matrix.os }}
+          if-no-files-found: error
+          path: |
+            target/*/mshot_*
+            !**/*.d
+
+
+  test:
+    name: Test (${{ matrix.os }}|${{ matrix.rust }})
+    needs: build
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ ubuntu-latest, windows-latest, macos-latest ]
+        rust: [ stable ]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup runner
+        uses: ./.github/actions/setup
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          os: ${{ matrix.os }}
+          rust: ${{ matrix.rust }}
+
+      - name: Test
+        run: cargo test --all --verbose --release
+
+
+  clippy:
+    name: Clippy
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup runner
+        uses: ./.github/actions/setup
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Clippy
+        run: cargo clippy --all --verbose --release
+
+
+  fmt:
+    name: Fmt
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup runner
+        uses: ./.github/actions/setup
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Fmt
+        run: cargo fmt --check

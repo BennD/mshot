@@ -5,21 +5,25 @@ inputs:
   repo-token:
     description: 'The GITHUB_TOKEN secret'
     required: true
+  restore-only:
+    description: 'Only restore cache'
+    required: false
+    default: 'true'
+  rust:
+    description: 'Rust version'
+    required: false
+    default: 'stable'
+  os:
+    description: 'Operating system'
+    required: false
+    default: 'ubuntu-latest'
 
 runs:
   using: "composite"
-  steps:
-    - name: Setup ubuntu-latest
-      if: matrix.os == 'ubuntu-latest'
-      uses: ./.github/actions/setup-ubuntu-latest
-    - name: Setup windows-latest
-      if: matrix.os == 'windows-latest'
-      uses: ./.github/actions/setup-windows-latest
-    - name: Setup macos-latest
-      if: matrix.os == 'macos-latest'
-      uses: ./.github/actions/setup-macos-latest
 
+  steps:
     - name: Setup Cache
+      if: inputs.restore-only == 'false'
       uses: actions/cache@v3
       with:
         path: |
@@ -28,18 +32,41 @@ runs:
           ~/.cargo/registry/cache/
           ~/.cargo/git/db/
           target/
-        key: ${{ matrix.os }}-cargo-${{ matrix.rust }}-${{ hashFiles('**/Cargo.lock') }}
+        key: ${{ inputs.os }}-cargo-${{ inputs.rust }}-${{ hashFiles('**/Cargo.lock') }}
         restore-keys: |
-          ${{ matrix.os }}-cargo-${{ matrix.rust }}-
+          ${{ inputs.os }}-cargo-${{ inputs.rust }}-
+
+    - name: Restore cache
+      if: inputs.restore-only == 'true'
+      uses: actions/cache/restore@v3
+      with:
+        path: |
+          ~/.cargo/bin/
+          ~/.cargo/registry/index/
+          ~/.cargo/registry/cache/
+          ~/.cargo/git/db/
+          target/
+        key: ${{ inputs.os }}-cargo-${{ inputs.rust }}-${{ hashFiles('**/Cargo.lock') }}
+        restore-keys: |
+          ${{ inputs.os }}-cargo-${{ inputs.rust }}-
 
     - name: Install protoc
       uses: arduino/setup-protoc@v1
       with:
         repo-token: ${{ inputs.repo-token }}
 
-    - name: Install rust ${{ matrix.rust }}
-      uses: actions-rs/toolchain@v1
+    - name: Install rust ${{ inputs.rust }}
+      uses: dtolnay/rust-toolchain@master
       with:
-        toolchain: ${{ matrix.rust }}
-        profile: minimal
-        override: true
+        toolchain: ${{ inputs.rust }}
+        copmponents: rustfmt, clippy
+
+    - name: Setup ubuntu-latest
+      if: inputs.os == 'ubuntu-latest'
+      uses: ./.github/actions/setup-ubuntu-latest
+    - name: Setup windows-latest
+      if: inputs.os == 'windows-latest'
+      uses: ./.github/actions/setup-windows-latest
+    - name: Setup macos-latest
+      if: inputs.os == 'macos-latest'
+      uses: ./.github/actions/setup-macos-latest
