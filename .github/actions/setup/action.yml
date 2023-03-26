@@ -1,14 +1,6 @@
 name: setup
 description: Setup runner
 
-inputs:
-  repo-token:
-    description: 'The GITHUB_TOKEN secret'
-    required: true
-  os:
-    description: 'The OS to setup'
-    required: true
-
 runs:
   using: "composite"
   steps:
@@ -21,16 +13,19 @@ runs:
     - name: Setup macos-latest
       if: matrix.os == 'macos-latest'
       uses: ./.github/actions/setup-macos-latest
+
     - name: Install protoc
       uses: arduino/setup-protoc@v1
       with:
-        repo-token: ${{ inputs.repo-token }}
+        repo-token: ${{ secrets.GITHUB_TOKEN }}
+
     - name: Install rust ${{ matrix.rust }}
       uses: actions-rs/toolchain@v1
       with:
         toolchain: ${{ matrix.rust }}
         profile: minimal
         override: true
+
     - name: Setup rust cache
       uses: Swatinem/rust-cache@v2.2.1
       with:

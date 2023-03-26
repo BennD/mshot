@@ -19,14 +19,15 @@ jobs:
       RUSTV: ${{ matrix.rust }}
 
     steps:
-    - uses: actions/checkout@v3
+    - name: Checkout
+      uses: actions/checkout@v3
+
     - name: Setup runner
       uses: ./.github/actions/setup
-      with:
-        repo-token: ${{ secrets.GITHUB_TOKEN }}
-        os: ${{ matrix.os }}
+
     - name: Build
       run: cargo build --all --verbose --release
+
     - name: Upload artifacts
       uses: actions/upload-artifact@v3
       with:
