@@ -1,8 +1,18 @@
 name: setup-ubuntu-latest
 description: Setup runner (ubuntu)
+
+inputs:
+  is-builder:
+    description: 'Installs required build tools'
+    required: true
+  repo-token:
+    description: 'The GITHUB_TOKEN secret'
+    required: true
+
 runs:
   using: "composite"
   steps:
-    - uses: daaku/gh-action-apt-install@v4
+    - name: Install apt packages
+      uses: daaku/gh-action-apt-install@v4
       with:
         packages: libdbus-1-dev

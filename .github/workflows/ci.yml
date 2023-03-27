@@ -28,7 +28,7 @@ jobs:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           os: ${{ matrix.os }}
           rust: ${{ matrix.rust }}
-          restore-only: 'false'
+          is-builder: 'true'
 
       - name: Build
         run: cargo build --all --verbose --release

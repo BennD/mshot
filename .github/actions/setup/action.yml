@@ -5,10 +5,10 @@ inputs:
   repo-token:
     description: 'The GITHUB_TOKEN secret'
     required: true
-  restore-only:
-    description: 'Only restore cache'
+  is-builder:
+    description: 'Installs required build tools and updates cache'
     required: false
-    default: 'true'
+    default: 'false'
   rust:
     description: 'Rust version'
     required: false
@@ -23,7 +23,7 @@ runs:
 
   steps:
     - name: Setup Cache
-      if: inputs.restore-only == 'false'
+      if: inputs.is-builder == 'true'
       uses: actions/cache@v3
       with:
         path: |
@@ -37,7 +37,7 @@ runs:
           ${{ inputs.os }}-rust-${{ inputs.rust }}-
 
     - name: Restore cache
-      if: inputs.restore-only == 'true'
+      if: inputs.is-builder == 'false'
       uses: actions/cache/restore@v3
       with:
         path: |
@@ -51,6 +51,7 @@ runs:
           ${{ inputs.os }}-rust-${{ inputs.rust }}-
 
     - name: Install protoc
+      if: inputs.is-builder == 'true'
       uses: arduino/setup-protoc@v1
       with:
         repo-token: ${{ inputs.repo-token }}
@@ -64,9 +65,18 @@ runs:
     - name: Setup ubuntu-latest
       if: inputs.os == 'ubuntu-latest'
       uses: ./.github/actions/setup-ubuntu-latest
+      with:
+        repo-token: ${{ inputs.repo-token }}
+        is-builder: ${{ inputs.is-builder }}
     - name: Setup windows-latest
       if: inputs.os == 'windows-latest'
       uses: ./.github/actions/setup-windows-latest
+      with:
+        repo-token: ${{ inputs.repo-token }}
+        is-builder: ${{ inputs.is-builder }}
     - name: Setup macos-latest
       if: inputs.os == 'macos-latest'
       uses: ./.github/actions/setup-macos-latest
+      with:
+        repo-token: ${{ inputs.repo-token }}
+        is-builder: ${{ inputs.is-builder }}

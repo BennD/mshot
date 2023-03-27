@@ -1,5 +1,14 @@
 name: setup-windows-latest
 description: Setup runner (windows)
+
+inputs:
+  is-builder:
+    description: 'Installs required build tools'
+    required: true
+  repo-token:
+    description: 'The GITHUB_TOKEN secret'
+    required: true
+
 runs:
   using: "composite"
   steps:
