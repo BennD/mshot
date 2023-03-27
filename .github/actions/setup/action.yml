@@ -23,8 +23,8 @@ runs:
 
   steps:
     - name: Setup Cache
-#      if: inputs.restore-only == 'false'
-      uses: actions/cache@v2
+      if: inputs.restore-only == 'false'
+      uses: actions/cache@v3
       with:
         path: |
           ~/.cargo/bin/
@@ -32,23 +32,23 @@ runs:
           ~/.cargo/registry/cache/
           ~/.cargo/git/db/
           target/
-        key: ${{ inputs.os }}-cargo-${{ inputs.rust }}-${{ hashFiles('**/Cargo.lock') }}
+        key: ${{ inputs.os }}-rust-${{ inputs.rust }}-${{ hashFiles('**/Cargo.lock') }}
         restore-keys: |
-          ${{ inputs.os }}-cargo-${{ inputs.rust }}-
+          ${{ inputs.os }}-rust-${{ inputs.rust }}-
 
-#    - name: Restore cache
-#      if: inputs.restore-only == 'true'
-#      uses: actions/cache/restore@v3
-#      with:
-#        path: |
-#          ~/.cargo/bin/
-#          ~/.cargo/registry/index/
-#          ~/.cargo/registry/cache/
-#          ~/.cargo/git/db/
-#          target/
-#        key: ${{ inputs.os }}-cargo-${{ inputs.rust }}-${{ hashFiles('**/Cargo.lock') }}
-#        restore-keys: |
-#          ${{ inputs.os }}-cargo-${{ inputs.rust }}-
+    - name: Restore cache
+      if: inputs.restore-only == 'true'
+      uses: actions/cache/restore@v3
+      with:
+        path: |
+          ~/.cargo/bin/
+          ~/.cargo/registry/index/
+          ~/.cargo/registry/cache/
+          ~/.cargo/git/db/
+          target/
+        key: ${{ inputs.os }}-rust-${{ inputs.rust }}-${{ hashFiles('**/Cargo.lock') }}
+        restore-keys: |
+          ${{ inputs.os }}-rust-${{ inputs.rust }}-
 
     - name: Install protoc
       uses: arduino/setup-protoc@v1
