@@ -36,14 +36,17 @@ runs:
         key: ${{ runner.os }}-tools
 
     # Add ~/.local/bin to PATH
-#    - name: Add ~/.local/bin to PATH
-#      shell: bash
-#      run: |
-#        echo "$HOME/.local/bin" >> $GITHUB_PATH
-#        echo "$HOME/.local/bin" >> $env:Path
-    - name: Add ~/.local/bin to PATH
-      env:
-      PATH: ${{ env.PATH }}:$HOME/.local/bin
+    - name: Add ~/.local/bin to PATH (Linux/macOS)
+      if: runner.os == 'Linux' || runner.os == 'macOS'
+      shell: bash
+      run: |
+        echo "$HOME/.local/bin" >> $GITHUB_PATH
+
+    - name: Add ~/.local/bin to PATH (Windows)
+      if: runner.os == 'Windows'
+      shell: powershell
+      run: |
+        echo "${HOME}/.local/bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
 
     # Install rust
     - name: Install rust ${{ inputs.rust }}
