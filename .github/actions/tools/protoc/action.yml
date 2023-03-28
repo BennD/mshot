@@ -30,11 +30,10 @@ runs:
             exit 1
           fi
         
-          # Download and extract in temp folder, then install to ~/.local/bin
+          # Download and extract into ~/.local
           mkdir -p $RUNNER_TEMP/protoc
           curl -L $download_url -o $RUNNER_TEMP/protoc/protoc.zip
-          unzip $RUNNER_TEMP/protoc/protoc.zip -d $RUNNER_TEMP/protoc
-          mv $RUNNER_TEMP/protoc/bin/protoc ~/.local/bin/
+          unzip $RUNNER_TEMP/protoc/protoc.zip -d ~/.local
         
         else
           echo "protoc $stripped_release_version already installed"

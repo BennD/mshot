@@ -19,13 +19,6 @@ runs:
   using: "composite"
 
   steps:
-    # Setup tools like rust, protoc, etc.
-    - name: Setup tools
-      uses: ./.github/actions/tools
-      with:
-        is-builder: ${{ inputs.is-builder }}
-        rust: ${{ inputs.rust }}
-
     # Do setups that are only required for a specific OS
     - name: Setup ubuntu-latest
       if: inputs.os == 'ubuntu-latest'
@@ -38,3 +31,10 @@ runs:
     - name: Setup macos-latest
       if: inputs.os == 'macos-latest'
       uses: ./.github/actions/setup/macos-latest
+
+    # Setup tools like rust, protoc, etc.
+    - name: Setup tools
+      uses: ./.github/actions/tools
+      with:
+        is-builder: ${{ inputs.is-builder }}
+        rust: ${{ inputs.rust }}
