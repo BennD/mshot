@@ -25,6 +25,7 @@ jobs:
       - name: Setup runner
         uses: ./.github/actions/setup
         with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
           os: ${{ matrix.os }}
           rust: ${{ matrix.rust }}
           is-builder: 'true'
@@ -60,7 +61,7 @@ jobs:
       - name: Setup runner
         uses: ./.github/actions/setup
         with:
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
           os: ${{ matrix.os }}
           rust: ${{ matrix.rust }}
 
@@ -80,7 +81,7 @@ jobs:
       - name: Setup runner
         uses: ./.github/actions/setup
         with:
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Clippy
         run: cargo clippy --all --verbose --release
