@@ -12,11 +12,11 @@ runs:
         stripped_release_version=$(echo $release_version | grep -oP '\d+\.\d+(\.\d+)?')
         
         # Get installed version
-        installed_version=$(protoc --version 2> /dev/null)
+        installed_version=$(protoc --version 2> /dev/null || echo "")
         strippped_installed_version=$(echo $installed_version | grep -oP '\d+\.\d+(\.\d+)?')
         
         # Check if we have the correct version installed
-        if ! protoc --version | grep -q "$stripped_release_version"; then
+        if $striped_release_version != $stripped_installed_version; then
           if [[ ${{ runner.os }} == 'Linux' ]]; then
             echo "Download protoc $stripped_release_version for Linux"
             download_url=$(curl -s https://api.github.com/repos/protocolbuffers/protobuf/releases/latest | grep "browser_download_url.*linux-x86_64.zip" | cut -d : -f 2,3 | tr -d \")
