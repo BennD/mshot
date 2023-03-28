@@ -7,6 +7,7 @@ runs:
     - name: Download protoc from https://github.com/protocolbuffers/protobuf/releases
       shell: bash
       run: |
+        # Trigger rerun
         set -x
         # Get latest release version
         release_version=$(curl -s https://api.github.com/repos/protocolbuffers/protobuf/releases/latest | grep "tag_name" | grep -oE '[0-9]+\.[0-9]+(\.[0-9]+)?')
