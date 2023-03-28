@@ -7,6 +7,7 @@ runs:
     - name: Download protoc from https://github.com/protocolbuffers/protobuf/releases
       shell: bash
       run: |
+        set -x
         # Get latest release version
         release_version=$(curl -s https://api.github.com/repos/protocolbuffers/protobuf/releases/latest | grep -oP '"tag_name": "\K(.*)(?=")')
         stripped_release_version=$(echo $release_version | grep -oP '\d+\.\d+(\.\d+)?')
