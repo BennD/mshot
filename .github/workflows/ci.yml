@@ -98,7 +98,7 @@ jobs:
       - name: Setup runner
         uses: ./.github/actions/setup
         with:
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Fmt
         run: cargo fmt --check
