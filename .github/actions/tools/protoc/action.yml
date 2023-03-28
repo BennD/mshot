@@ -17,13 +17,13 @@ runs:
         
         # Check if we have the correct version installed
         if $striped_release_version != $stripped_installed_version; then
-          if [[ ${{ runner.os }} == 'Linux' ]]; then
+          if [[ '${{ runner.os }}' == 'Linux' ]]; then
             echo "Download protoc $stripped_release_version for Linux"
             download_url=$(curl -s https://api.github.com/repos/protocolbuffers/protobuf/releases/latest | grep "browser_download_url.*linux-x86_64.zip" | cut -d : -f 2,3 | tr -d \")
-          else if [[ ${{ runner.os }} == 'macOS' ]]; then
+          else if [[ '${{ runner.os }}' == 'macOS' ]]; then
             echo "Download protoc $stripped_release_version for macOS"
             download_url=$(curl -s https://api.github.com/repos/protocolbuffers/protobuf/releases/latest | grep "browser_download_url.*osx-x86_64.zip" | cut -d : -f 2,3 | tr -d \")
-          else if [[ ${{ runner.os }} == 'Windows' ]]; then
+          else if [[ '${{ runner.os }}' == 'Windows' ]]; then
             echo "Download protoc $stripped_release_version for Windows"
             download_url=$(curl -s https://api.github.com/repos/protocolbuffers/protobuf/releases/latest | grep "browser_download_url.*win64.zip" | cut -d : -f 2,3 | tr -d \")
           else 
