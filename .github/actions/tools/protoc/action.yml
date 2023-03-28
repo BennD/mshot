@@ -13,7 +13,7 @@ runs:
         stripped_release_version=$(echo $release_version | grep -oP '\d+\.\d+(\.\d+)?')
         
         # Get installed version
-        installed_version=$(protoc --version 2> /dev/null || echo "")
+        installed_version=$(protoc --version 2> /dev/null || echo "0.0")
         strippped_installed_version=$(echo $installed_version | grep -oP '\d+\.\d+(\.\d+)?')
         
         # Check if we have the correct version installed
