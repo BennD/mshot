@@ -2,13 +2,10 @@ name: setup
 description: Setup runner
 
 inputs:
-  repo-token:
-    description: 'The GITHUB_TOKEN secret'
-    required: true
-  restore-only:
-    description: 'Only restore cache'
+  modify_cache:
+    description: 'Decides if cache should be modified or restored only'
     required: false
-    default: 'true'
+    default: 'false'
   rust:
     description: 'Rust version'
     required: false
@@ -17,56 +14,31 @@ inputs:
     description: 'Operating system'
     required: false
     default: 'ubuntu-latest'
+  github_token:
+    description: 'GitHub token'
+    required: true
 
 runs:
   using: "composite"
 
   steps:
-    - name: Setup Cache
-      if: inputs.restore-only == 'false'
-      uses: actions/cache@v3
-      with:
-        path: |
-          ~/.cargo/bin/
-          ~/.cargo/registry/index/
-          ~/.cargo/registry/cache/
-          ~/.cargo/git/db/
-          target/
-        key: ${{ inputs.os }}-rust-${{ inputs.rust }}-${{ hashFiles('**/Cargo.lock') }}
-        restore-keys: |
-          ${{ inputs.os }}-rust-${{ inputs.rust }}-
-
-    - name: Restore cache
-      if: inputs.restore-only == 'true'
-      uses: actions/cache/restore@v3
-      with:
-        path: |
-          ~/.cargo/bin/
-          ~/.cargo/registry/index/
-          ~/.cargo/registry/cache/
-          ~/.cargo/git/db/
-          target/
-        key: ${{ inputs.os }}-rust-${{ inputs.rust }}-${{ hashFiles('**/Cargo.lock') }}
-        restore-keys: |
-          ${{ inputs.os }}-rust-${{ inputs.rust }}-
-
-    - name: Install protoc
-      uses: arduino/setup-protoc@v1
-      with:
-        repo-token: ${{ inputs.repo-token }}
-
-    - name: Install rust ${{ inputs.rust }}
-      uses: dtolnay/rust-toolchain@master
-      with:
-        toolchain: ${{ inputs.rust }}
-        components: rustfmt, clippy
-
+    # Do setups that are only required for a specific OS
     - name: Setup ubuntu-latest
       if: inputs.os == 'ubuntu-latest'
-      uses: ./.github/actions/setup-ubuntu-latest
+      uses: ./.github/actions/setup/ubuntu-latest
+
     - name: Setup windows-latest
       if: inputs.os == 'windows-latest'
-      uses: ./.github/actions/setup-windows-latest
+      uses: ./.github/actions/setup/windows-latest
+
     - name: Setup macos-latest
       if: inputs.os == 'macos-latest'
-      uses: ./.github/actions/setup-macos-latest
+      uses: ./.github/actions/setup/macos-latest
+
+    # Setup tools like rust, protoc, etc.
+    - name: Setup tools
+      uses: ./.github/actions/tools
+      with:
+        modify_cache: ${{ inputs.modify_cache }}
+        rust: ${{ inputs.rust }}
+        github_token: ${{ inputs.github_token }}

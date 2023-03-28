@@ -1,8 +1,10 @@
 name: setup-windows-latest
-description: Setup runner (windows)
+description: Setup runner for windows-latest
+
 runs:
   using: "composite"
+
   steps:
-    - shell: powershell
+    - shell: bash
       run: |
         echo "Nothing to do"

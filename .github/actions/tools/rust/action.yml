@@ -1,0 +1,46 @@
+name: rust
+description: Setup rust
+
+inputs:
+  rust:
+    description: 'Rust toolchain'
+    required: true
+  modify_cache:
+    description: 'Installs required build tools and updates cache'
+    required: true
+
+runs:
+  using: "composite"
+
+  steps:
+    - name: Setup rust cache
+      if: inputs.modify_cache == 'true'
+      uses: actions/cache@v3
+      with:
+        path: |
+          ~/.cargo/registry/index/
+          ~/.cargo/registry/cache/
+          ~/.cargo/git/db/
+          target/
+        key: ${{ runner.os }}-rust-${{ inputs.rust }}-${{ hashFiles('**/Cargo.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-rust-${{ inputs.rust }}-
+
+    - name: Restore rust cache
+      if: inputs.modify_cache == 'false'
+      uses: actions/cache/restore@v3
+      with:
+        path: |
+          ~/.cargo/registry/index/
+          ~/.cargo/registry/cache/
+          ~/.cargo/git/db/
+          target/
+        key: ${{ runner.os }}-rust-${{ inputs.rust }}-${{ hashFiles('**/Cargo.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-rust-${{ inputs.rust }}-
+
+    - name: Install rust ${{ inputs.rust }}
+      uses: dtolnay/rust-toolchain@master
+      with:
+        toolchain: ${{ inputs.rust }}
+        components: rustfmt, clippy

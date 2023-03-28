@@ -1,8 +1,0 @@
-name: setup-ubuntu-latest
-description: Setup runner (ubuntu)
-runs:
-  using: "composite"
-  steps:
-    - uses: daaku/gh-action-apt-install@v4
-      with:
-        packages: libdbus-1-dev

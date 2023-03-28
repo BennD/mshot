@@ -1,0 +1,46 @@
+name: install-protoc
+description: Install protoc
+
+inputs:
+  github_token:
+    description: 'GitHub token'
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - name: Download protoc from https://github.com/protocolbuffers/protobuf/releases
+      shell: bash
+      run: |
+        # Cache release website
+        curl -H "Authorization: token ${{ inputs.github_token }}" -s https://api.github.com/repos/protocolbuffers/protobuf/releases/latest > $RUNNER_TEMP/protobuf-release.json
+        
+        # Get latest release version
+        release_version=$(cat $RUNNER_TEMP/protobuf-release.json | grep "tag_name" | grep -oE '[0-9]+\.[0-9]+(\.[0-9]+)?')
+        # Get installed version
+        installed_version=$((protoc --version 2> /dev/null || echo "0.0") | grep -oE '[0-9]+\.[0-9]+(\.[0-9]+)?')
+        
+        # Check if we have the correct version installed
+        if [[ $release_version != $installed_version ]]; then
+          if [[ '${{ runner.os }}' == 'Linux' ]]; then
+            echo "Download protoc $stripped_release_version for Linux"
+            download_url=$(cat $RUNNER_TEMP/protobuf-release.json | grep "browser_download_url.*linux-x86_64.zip" | cut -d : -f 2,3 | tr -d \")
+          elif [[ '${{ runner.os }}' == 'macOS' ]]; then
+            echo "Download protoc $stripped_release_version for macOS"
+            download_url=$(cat $RUNNER_TEMP/protobuf-release.json | grep "browser_download_url.*osx-x86_64.zip" | cut -d : -f 2,3 | tr -d \")
+          elif [[ '${{ runner.os }}' == 'Windows' ]]; then
+            echo "Download protoc $stripped_release_version for Windows"
+            download_url=$(cat $RUNNER_TEMP/protobuf-release.json | grep "browser_download_url.*win64.zip" | cut -d : -f 2,3 | tr -d \")
+          else 
+            echo "Unknown OS"
+            exit 1
+          fi
+        
+          # Download and extract into ~/.local
+          mkdir -p $RUNNER_TEMP/protoc
+          curl -H "Authorization: token ${{ inputs.github_token }}" -L $download_url -o $RUNNER_TEMP/protoc/protoc.zip
+          unzip $RUNNER_TEMP/protoc/protoc.zip -d ~/.local
+        
+        else
+          echo "protoc $stripped_release_version already installed"
+        fi
