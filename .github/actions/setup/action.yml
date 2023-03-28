@@ -38,3 +38,4 @@ runs:
       with:
         is-builder: ${{ inputs.is-builder }}
         rust: ${{ inputs.rust }}
+        github_token: ${{ inputs.github_token }}
