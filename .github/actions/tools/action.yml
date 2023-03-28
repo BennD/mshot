@@ -36,11 +36,14 @@ runs:
         key: ${{ runner.os }}-tools
 
     # Add ~/.local/bin to PATH
+#    - name: Add ~/.local/bin to PATH
+#      shell: bash
+#      run: |
+#        echo "$HOME/.local/bin" >> $GITHUB_PATH
+#        echo "$HOME/.local/bin" >> $env:Path
     - name: Add ~/.local/bin to PATH
-      shell: bash
-      run: |
-        echo "$HOME/.local/bin" >> $GITHUB_PATH
-        echo "$HOME/.local/bin" >> $env:Path
+      env:
+      PATH: ${{ env.PATH }}:$HOME/.local/bin
 
     # Install rust
     - name: Install rust ${{ inputs.rust }}
