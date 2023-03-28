@@ -24,7 +24,7 @@ runs:
         set -x
         
         # Cache release website
-        curl -H "Authorization: token ${{ github_token }}" -s https://api.github.com/repos/protocolbuffers/protobuf/releases/latest > $RUNNER_TMP/protobuf-release.json
+        curl -H "Authorization: token ${{ inputs.github_token }}" -s https://api.github.com/repos/protocolbuffers/protobuf/releases/latest > $RUNNER_TMP/protobuf-release.json
         
         # Get latest release version
         release_version=$(cat $RUNNER_TMP/protobuf-release.json | grep "tag_name" | grep -oE '[0-9]+\.[0-9]+(\.[0-9]+)?')
@@ -49,7 +49,7 @@ runs:
         
           # Download and extract into ~/.local
           mkdir -p $RUNNER_TEMP/protoc
-          curl -H "Authorization: token ${{ github_token }}" -L $download_url -o $RUNNER_TEMP/protoc/protoc.zip
+          curl -H "Authorization: token ${{ inputs.github_token }}" -L $download_url -o $RUNNER_TEMP/protoc/protoc.zip
           unzip $RUNNER_TEMP/protoc/protoc.zip -d ~/.local
         
         else
