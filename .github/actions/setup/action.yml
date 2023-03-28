@@ -2,9 +2,6 @@ name: setup
 description: Setup runner
 
 inputs:
-  repo-token:
-    description: 'The GITHUB_TOKEN secret'
-    required: true
   is-builder:
     description: 'Installs required build tools and updates cache'
     required: false
@@ -22,61 +19,22 @@ runs:
   using: "composite"
 
   steps:
-    - name: Setup Cache
-      if: inputs.is-builder == 'true'
-      uses: actions/cache@v3
+    # Setup tools like rust, protoc, etc.
+    - name: Setup tools
+      uses: ./.github/actions/tools
       with:
-        path: |
-          ~/.cargo/bin/
-          ~/.cargo/registry/index/
-          ~/.cargo/registry/cache/
-          ~/.cargo/git/db/
-          target/
-        key: ${{ inputs.os }}-rust-${{ inputs.rust }}-${{ hashFiles('**/Cargo.lock') }}
-        restore-keys: |
-          ${{ inputs.os }}-rust-${{ inputs.rust }}-
+        is-builder: ${{ inputs.is-builder }}
+        rust: ${{ inputs.rust }}
 
-    - name: Restore cache
-      if: inputs.is-builder == 'false'
-      uses: actions/cache/restore@v3
-      with:
-        path: |
-          ~/.cargo/bin/
-          ~/.cargo/registry/index/
-          ~/.cargo/registry/cache/
-          ~/.cargo/git/db/
-          target/
-        key: ${{ inputs.os }}-rust-${{ inputs.rust }}-${{ hashFiles('**/Cargo.lock') }}
-        restore-keys: |
-          ${{ inputs.os }}-rust-${{ inputs.rust }}-
-
-    - name: Install protoc
-      if: inputs.is-builder == 'true'
-      uses: arduino/setup-protoc@v1
-      with:
-        repo-token: ${{ inputs.repo-token }}
-
-    - name: Install rust ${{ inputs.rust }}
-      uses: dtolnay/rust-toolchain@master
-      with:
-        toolchain: ${{ inputs.rust }}
-        components: rustfmt, clippy
-
+    # Do setups that are only required for a specific OS
     - name: Setup ubuntu-latest
       if: inputs.os == 'ubuntu-latest'
-      uses: ./.github/actions/setup-ubuntu-latest
-      with:
-        repo-token: ${{ inputs.repo-token }}
-        is-builder: ${{ inputs.is-builder }}
+      uses: ./.github/actions/setup/ubuntu-latest
+
     - name: Setup windows-latest
       if: inputs.os == 'windows-latest'
-      uses: ./.github/actions/setup-windows-latest
-      with:
-        repo-token: ${{ inputs.repo-token }}
-        is-builder: ${{ inputs.is-builder }}
+      uses: ./.github/actions/setup/windows-latest
+
     - name: Setup macos-latest
       if: inputs.os == 'macos-latest'
-      uses: ./.github/actions/setup-macos-latest
-      with:
-        repo-token: ${{ inputs.repo-token }}
-        is-builder: ${{ inputs.is-builder }}
+      uses: ./.github/actions/setup/macos-latest

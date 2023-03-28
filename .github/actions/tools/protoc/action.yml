@@ -1,0 +1,42 @@
+name: install-protoc
+description: Install protoc
+
+runs:
+  using: "composite"
+  steps:
+    - name: Download protoc from https://github.com/protocolbuffers/protobuf/releases
+      shell: bash
+      run: |
+        # Get latest release version
+        release_version=$(curl -s https://api.github.com/repos/protocolbuffers/protobuf/releases/latest | grep -oP '"tag_name": "\K(.*)(?=")')
+        stripped_release_version=$(echo $release_version | grep -oP '\d+\.\d+(\.\d+)?')
+        
+        # Get installed version
+        installed_version=$(protoc --version 2> /dev/null)
+        strippped_installed_version=$(echo $installed_version | grep -oP '\d+\.\d+(\.\d+)?')
+        
+        # Check if we have the correct version installed
+        if ! protoc --version | grep -q "$stripped_release_version"; then
+          if [[ ${{ runner.os }} == 'Linux' ]]; then
+            echo "Download protoc $stripped_release_version for Linux"
+            download_url=$(curl -s https://api.github.com/repos/protocolbuffers/protobuf/releases/latest | grep "browser_download_url.*linux-x86_64.zip" | cut -d : -f 2,3 | tr -d \")
+          else if [[ ${{ runner.os }} == 'macOS' ]]; then
+            echo "Download protoc $stripped_release_version for macOS"
+            download_url=$(curl -s https://api.github.com/repos/protocolbuffers/protobuf/releases/latest | grep "browser_download_url.*osx-x86_64.zip" | cut -d : -f 2,3 | tr -d \")
+          else if [[ ${{ runner.os }} == 'Windows' ]]; then
+            echo "Download protoc $stripped_release_version for Windows"
+            download_url=$(curl -s https://api.github.com/repos/protocolbuffers/protobuf/releases/latest | grep "browser_download_url.*win64.zip" | cut -d : -f 2,3 | tr -d \")
+          else 
+            echo "Unknown OS"
+            exit 1
+          fi
+        
+          # Download and extract in temp folder, then install to ~/.local/bin
+          mkdir -p $RUNNER_TEMP/protoc
+          curl -L $download_url -o $RUNNER_TEMP/protoc/protoc.zip
+          unzip $RUNNER_TEMP/protoc/protoc.zip -d $RUNNER_TEMP/protoc
+          mv $RUNNER_TEMP/protoc/bin/protoc ~/.local/bin/
+        
+        else
+          echo "protoc $stripped_release_version already installed"
+        fi
