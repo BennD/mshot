@@ -39,7 +39,7 @@ runs:
     - name: Add ~/.local/bin to PATH
       shell: bash
       run: |
-        echo "::add-path::$HOME/.local/bin"
+        echo "$HOME/.local/bin" >> $GITHUB_PATH
 
     # Install rust
     - name: Install rust ${{ inputs.rust }}

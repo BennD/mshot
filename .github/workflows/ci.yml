@@ -25,7 +25,6 @@ jobs:
       - name: Setup runner
         uses: ./.github/actions/setup
         with:
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
           os: ${{ matrix.os }}
           rust: ${{ matrix.rust }}
           is-builder: 'true'
