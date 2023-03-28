@@ -5,7 +5,7 @@ inputs:
   rust:
     description: 'Rust toolchain'
     required: true
-  is-builder:
+  modify_cache:
     description: 'Installs required build tools and updates cache'
     required: true
 
@@ -14,7 +14,7 @@ runs:
 
   steps:
     - name: Setup rust cache
-      if: inputs.is-builder == 'true'
+      if: inputs.modify_cache == 'true'
       uses: actions/cache@v3
       with:
         path: |
@@ -27,7 +27,7 @@ runs:
           ${{ runner.os }}-rust-${{ inputs.rust }}-
 
     - name: Restore rust cache
-      if: inputs.is-builder == 'false'
+      if: inputs.modify_cache == 'false'
       uses: actions/cache/restore@v3
       with:
         path: |

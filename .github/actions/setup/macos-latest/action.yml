@@ -7,4 +7,4 @@ runs:
   steps:
     - shell: bash
       run: |
-        brew install curl grep
+        echo "Nothing to do"

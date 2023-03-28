@@ -26,9 +26,9 @@ jobs:
         uses: ./.github/actions/setup
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
+          modify_cache: 'true'
           os: ${{ matrix.os }}
           rust: ${{ matrix.rust }}
-          is-builder: 'true'
 
       - name: Build
         run: cargo build --all --verbose --release

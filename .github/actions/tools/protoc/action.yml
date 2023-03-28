@@ -9,20 +9,9 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - name: Test MacOS
-      if: runner.os == 'macOS'
-      shell: bash
-      run: |
-        echo $(grep --version)
-        echo $(curl -s https://api.github.com/repos/protocolbuffers/protobuf/releases/latest)
-        echo $(curl -s https://api.github.com/repos/protocolbuffers/protobuf/releases/latest | grep "tag_name")
-        echo $(curl -s https://api.github.com/repos/protocolbuffers/protobuf/releases/latest | grep "tag_name" | grep -oE '[0-9]+\.[0-9]+(\.[0-9]+)?')
     - name: Download protoc from https://github.com/protocolbuffers/protobuf/releases
       shell: bash
       run: |
-        # TODO remove
-        set -x
-        
         # Cache release website
         curl -H "Authorization: token ${{ inputs.github_token }}" -s https://api.github.com/repos/protocolbuffers/protobuf/releases/latest > $RUNNER_TEMP/protobuf-release.json
         

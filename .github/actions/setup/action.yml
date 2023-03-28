@@ -2,8 +2,8 @@ name: setup
 description: Setup runner
 
 inputs:
-  is-builder:
-    description: 'Installs required build tools and updates cache'
+  modify_cache:
+    description: 'Decides if cache should be modified or restored only'
     required: false
     default: 'false'
   rust:
@@ -39,6 +39,6 @@ runs:
     - name: Setup tools
       uses: ./.github/actions/tools
       with:
-        is-builder: ${{ inputs.is-builder }}
+        modify_cache: ${{ inputs.modify_cache }}
         rust: ${{ inputs.rust }}
         github_token: ${{ inputs.github_token }}

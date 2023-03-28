@@ -2,7 +2,7 @@ name: tools
 description: Install tools
 
 inputs:
-  is-builder:
+  modify_cache:
     description: 'Installs required build tools and updates cache'
     required: true
   rust:
@@ -23,7 +23,7 @@ runs:
         mkdir -p ~/.local/
 
     - name: Setup tool cache
-      if: inputs.is-builder == 'true'
+      if: inputs.modify_cache == 'true'
       uses: actions/cache@v3
       with:
         path: |
@@ -31,7 +31,7 @@ runs:
         key: ${{ runner.os }}-tools
 
     - name: Restore tool cache
-      if: inputs.is-builder == 'false'
+      if: inputs.modify_cache == 'false'
       uses: actions/cache/restore@v3
       with:
         path: |
@@ -56,11 +56,10 @@ runs:
       uses: ./.github/actions/tools/rust
       with:
         rust: ${{ inputs.rust }}
-        is-builder: ${{ inputs.is-builder }}
+        modify_cache: ${{ inputs.modify_cache }}
 
     # Install protoc
     - name: Install protoc
-      if: inputs.is-builder == 'true'
       uses: ./.github/actions/tools/protoc
       with:
         github_token: ${{ inputs.github_token }}
