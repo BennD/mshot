@@ -16,21 +16,12 @@ runs:
   using: "composite"
 
   steps:
-    # Setup tool cache
-    - name: Setup tool cache
-      if: inputs.modify_cache == 'true'
-      uses: ./.github/actions/util/cache
-      with:
-        path: |
-          ~/.local/
-        key: ${{ runner.os }}-tools
-        modify_cache: ${{ inputs.modify_cache }}
 
     # Add ~/.local/bin to PATH
     - name: Add ~/.local/bin to PATH
       uses: ./.github/actions/util/add_to_path
       with:
-        path: ~/.local/bin
+        path: ${HOME}/.local/bin
 
     # Install rust
     - name: Install rust ${{ inputs.rust }}
@@ -44,3 +35,4 @@ runs:
       uses: ./.github/actions/tools/protoc
       with:
         github_token: ${{ inputs.github_token }}
+        modify_cache: ${{ inputs.modify_cache }}

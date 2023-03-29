@@ -5,11 +5,16 @@ inputs:
   github_token:
     description: 'GitHub token'
     required: true
+  modify_cache:
+    description: 'Decides if cache should be modified or restored only'
+    required: true
 
 runs:
   using: "composite"
   steps:
-    - name: Download protoc from https://github.com/protocolbuffers/protobuf/releases
+    # Gather release information
+    - name: Gather release information
+      id: release_info
       shell: bash
       run: |
         # Cache release website
@@ -17,30 +22,47 @@ runs:
         
         # Get latest release version
         release_version=$(cat $RUNNER_TEMP/protobuf-release.json | grep "tag_name" | grep -oE '[0-9]+\.[0-9]+(\.[0-9]+)?')
-        # Get installed version
-        installed_version=$((protoc --version 2> /dev/null || echo "0.0") | grep -oE '[0-9]+\.[0-9]+(\.[0-9]+)?')
         
-        # Check if we have the correct version installed
-        if [[ $release_version != $installed_version ]]; then
-          if [[ '${{ runner.os }}' == 'Linux' ]]; then
-            echo "Download protoc $stripped_release_version for Linux"
-            download_url=$(cat $RUNNER_TEMP/protobuf-release.json | grep "browser_download_url.*linux-x86_64.zip" | cut -d : -f 2,3 | tr -d \")
-          elif [[ '${{ runner.os }}' == 'macOS' ]]; then
-            echo "Download protoc $stripped_release_version for macOS"
-            download_url=$(cat $RUNNER_TEMP/protobuf-release.json | grep "browser_download_url.*osx-x86_64.zip" | cut -d : -f 2,3 | tr -d \")
-          elif [[ '${{ runner.os }}' == 'Windows' ]]; then
-            echo "Download protoc $stripped_release_version for Windows"
-            download_url=$(cat $RUNNER_TEMP/protobuf-release.json | grep "browser_download_url.*win64.zip" | cut -d : -f 2,3 | tr -d \")
-          else 
-            echo "Unknown OS"
-            exit 1
-          fi
-        
-          # Download and extract into ~/.local
-          mkdir -p $RUNNER_TEMP/protoc
-          curl -H "Authorization: token ${{ inputs.github_token }}" -L $download_url -o $RUNNER_TEMP/protoc/protoc.zip
-          unzip $RUNNER_TEMP/protoc/protoc.zip -d ~/.local
-        
-        else
-          echo "protoc $stripped_release_version already installed"
+        # Get download URL
+        if [[ '${{ runner.os }}' == 'Linux' ]]; then
+          download_url=$(cat $RUNNER_TEMP/protobuf-release.json | grep "browser_download_url.*linux-x86_64.zip" | cut -d : -f 2,3 | tr -d \")
+        elif [[ '${{ runner.os }}' == 'macOS' ]]; then
+          download_url=$(cat $RUNNER_TEMP/protobuf-release.json | grep "browser_download_url.*osx-x86_64.zip" | cut -d : -f 2,3 | tr -d \")
+        elif [[ '${{ runner.os }}' == 'Windows' ]]; then
+          download_url=$(cat $RUNNER_TEMP/protobuf-release.json | grep "browser_download_url.*win64.zip" | cut -d : -f 2,3 | tr -d \")
+        else 
+          echo "Unknown OS"
+          exit 1
         fi
+      
+        // Save release information
+        echo "::set-output name=download_url::$download_url"
+        echo "::set-output name=release_version::$release_version"
+
+    # Setup protoc cache
+    - name: Setup protoc cache
+      id: setup_protoc_cache
+      uses: ./.github/actions/util/cache
+      with:
+        path: |
+          ~/.local/protoc
+        key: ${{ runner.os }}-protoc-${{ steps.release_info.outputs.release_version }}
+        modify_cache: ${{ inputs.modify_cache }}
+
+    # Fail in case of no cache hit and no right to modify cache
+    - name: Fail in case of no cache hit and no right to modify cache
+      if: steps.setup_protoc_cache.outputs.cache_hit != 'true' && inputs.modify_cache == 'false'
+      shell: bash
+      run: |
+        echo "No cache hit and no right to modify cache"
+        exit 1
+
+    # Install protoc
+    - name: Download protoc from https://github.com/protocolbuffers/protobuf/releases
+      if: steps.setup_protoc_cache.outputs.cache_hit != 'true'
+      shell: bash
+      run: |
+        # Download and extract into ~/.local
+        curl -H "Authorization: token ${{ inputs.github_token }}" -L $download_url -o $RUNNER_TEMP/protoc.zip
+        unzip $RUNNER_TEMP/protoc.zip -d ~/.local/protoc
+        ln -s ~/.local/protoc/bin/protoc ~/.local/bin/protoc

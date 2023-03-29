@@ -15,6 +15,11 @@ inputs:
     description: 'Cache restore keys'
     required: false
 
+outputs:
+  cache_hit:
+    description: 'Cache hit'
+    value: ${{ steps.cache_hit_check.outputs.cache-hit }}
+
 runs:
   using: "composite"
 
@@ -38,3 +43,16 @@ runs:
         path: ${{ inputs.path }}
         key: ${{ inputs.key }}
         restore-keys: ${{ inputs.restore_keys }}
+
+    # Check if we hit the cache
+    - name: Check if we hit the cache
+      id: cache_hit_check
+      shell: bash
+      run: |
+        if [[ "${{ steps.restore_cache.outputs.cache-hit }}" == "true" ]]; then
+          echo "::set-output name=cache_hit::true"
+        elif [[ "${{ steps.setup_cache.outputs.cache-hit }}" == "true" ]]; then
+          echo "::set-output name=cache_hit::true"
+        else
+          echo "::set-output name=cache_hit::false"
+        fi
