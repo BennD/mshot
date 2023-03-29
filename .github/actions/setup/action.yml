@@ -24,6 +24,7 @@ runs:
   steps:
     # Do setups that are only required for a specific OS
     - run: echo "## Setup ${{ inputs.os }}" >> $GITHUB_STEP_SUMMARY
+      shell: bash
     - name: Setup ubuntu-latest
       if: inputs.os == 'ubuntu-latest'
       uses: ./.github/actions/setup/ubuntu-latest
@@ -36,6 +37,7 @@ runs:
 
     # Setup tools like rust, protoc, etc.
     - run: echo "## Setup tools" >> $GITHUB_STEP_SUMMARY
+      shell: bash
     - name: Setup tools
       uses: ./.github/actions/tools
       with:
