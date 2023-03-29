@@ -25,12 +25,10 @@ jobs:
 
     steps:
       # Checkout
-      - run: echo "# Checkout" >> $GITHUB_STEP_SUMMARY
       - name: Checkout
         uses: actions/checkout@v3
 
       # Setup runner
-      - run: echo "# Setup runner" >> $GITHUB_STEP_SUMMARY
       - name: Setup runner
         uses: ./.github/actions/setup
         with:
@@ -40,12 +38,10 @@ jobs:
           rust: ${{ matrix.rust }}
 
       # Build
-      - run: echo "# Build" >> $GITHUB_STEP_SUMMARY
       - name: Build
         run: cargo build --all --verbose --release
 
       # Upload artifacts
-      - run: echo "# Upload artifacts" >> $GITHUB_STEP_SUMMARY
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
         with:
@@ -70,12 +66,10 @@ jobs:
 
     steps:
       # Checkout
-      - run : echo "# Checkout" >> $GITHUB_STEP_SUMMARY
       - name: Checkout
         uses: actions/checkout@v3
 
       # Setup runner
-      - run: echo "# Setup runner" >> $GITHUB_STEP_SUMMARY
       - name: Setup runner
         uses: ./.github/actions/setup
         with:
@@ -84,7 +78,6 @@ jobs:
           rust: ${{ matrix.rust }}
 
       # Test
-      - run: echo "# Test" >> $GITHUB_STEP_SUMMARY
       - name: Test
         run: cargo test --all --verbose --release
 
@@ -97,19 +90,16 @@ jobs:
 
     steps:
       # Checkout
-      - run : echo "# Checkout" >> $GITHUB_STEP_SUMMARY
       - name: Checkout
         uses: actions/checkout@v3
 
       # Setup runner
-      - run: echo "# Setup runner" >> $GITHUB_STEP_SUMMARY
       - name: Setup runner
         uses: ./.github/actions/setup
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
       # Clippy
-      - run: echo "# Clippy" >> $GITHUB_STEP_SUMMARY
       - name: Clippy
         run: cargo clippy --all --verbose --release
 
@@ -121,18 +111,15 @@ jobs:
 
     steps:
       # Checkout
-      - run : echo "# Checkout" >> $GITHUB_STEP_SUMMARY
       - name: Checkout
         uses: actions/checkout@v3
 
       # Setup runner
-      - run: echo "# Setup runner" >> $GITHUB_STEP_SUMMARY
       - name: Setup runner
         uses: ./.github/actions/setup
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
       # Check formatting
-      - run : echo "# Check formatting" >> $GITHUB_STEP_SUMMARY
       - name: Fmt
         run: cargo fmt --check

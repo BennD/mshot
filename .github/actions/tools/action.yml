@@ -17,8 +17,6 @@ runs:
 
   steps:
     # Setup tool cache
-    - run: echo "### Setup tool cache" >> $GITHUB_STEP_SUMMARY
-      shell: bash
     - name: Setup tool cache
       if: inputs.modify_cache == 'true'
       uses: ./.github/actions/util/cache
@@ -29,8 +27,6 @@ runs:
         modify_cache: ${{ inputs.modify_cache }}
 
     # Add ~/.local/bin to PATH
-    - run : echo "### Add ~/.local/bin to PATH" >> $GITHUB_STEP_SUMMARY
-      shell: bash
     - name: Add ~/.local/bin to PATH (Linux/macOS)
       if: runner.os == 'Linux' || runner.os == 'macOS'
       run: echo "$HOME/.local/bin" >> $GITHUB_PATH
@@ -41,8 +37,6 @@ runs:
       run: echo "${HOME}/.local/bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
 
     # Install rust
-    - run: echo "### Install rust ${{ inputs.rust }}" >> $GITHUB_STEP_SUMMARY
-      shell: bash
     - name: Install rust ${{ inputs.rust }}
       uses: ./.github/actions/tools/rust
       with:
@@ -50,8 +44,6 @@ runs:
         modify_cache: ${{ inputs.modify_cache }}
 
     # Install protoc
-    - run: echo "### Install protoc" >> $GITHUB_STEP_SUMMARY
-      shell: bash
     - name: Install protoc
       uses: ./.github/actions/tools/protoc
       with:

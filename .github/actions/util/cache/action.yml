@@ -2,14 +2,14 @@ name: cache
 description: Setup cache
 
 inputs:
-  modify_cache:
-    description: 'Decides if cache should be modified or restored only'
-    required: true
   path:
     description: 'Cache path'
     required: true
   key:
     description: 'Cache key'
+    required: true
+  modify_cache:
+    description: 'Decides if cache should be modified or restored only'
     required: true
   restore_keys:
     description: 'Cache restore keys'
@@ -28,14 +28,6 @@ runs:
         path: ${{ inputs.path }}
         key: ${{ inputs.key }}
         restore-keys: ${{ inputs.restore_keys }}
-    - uses: ./.github/actions/util/log_task
-      with:
-        success_message: "Setup cache"
-    - uses: ./.github/actions/util/log_task
-      with:
-        success: ${{ steps.setup_cache.outputs.cache-hit }}
-        success_message: "Restored cache"
-        failure_message: "Failed to restore cache"
 
     # Restore cache
     - name: Restore cache
@@ -46,8 +38,3 @@ runs:
         path: ${{ inputs.path }}
         key: ${{ inputs.key }}
         restore-keys: ${{ inputs.restore_keys }}
-    - uses: ./.github/actions/util/log_task
-      with:
-        success: ${{ steps.restore_cache.outputs.cache-hit }}
-        success_message: "Restored cache"
-        failure_message: "Failed to restore cache"
