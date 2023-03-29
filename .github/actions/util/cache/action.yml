@@ -1,0 +1,46 @@
+name: cache
+description: Setup cache
+
+inputs:
+  modify_cache:
+    description: 'Decides if cache should be modified or restored only'
+    required: true
+  path:
+    description: 'Cache path'
+    required: true
+  key:
+    description: 'Cache key'
+    required: true
+  restore_keys:
+    description: 'Cache restore keys'
+    required: false
+
+runs:
+  using : "composite"
+
+  steps:
+    # Setup cache
+    - shell: bash
+      if: inputs.modify_cache == 'true'
+      run: |
+        echo "## Setup cache" >> $GITHUB_STEP_SUMMARY
+    - name: Setup cache
+      if: inputs.modify_cache == 'true'
+      uses: actions/cache@v3
+      with:
+        path: ${{ inputs.path }}
+        key: ${{ inputs.key }}
+        restore-keys: ${{ inputs.restore_keys }}
+
+    # Restore cache
+    - shell: bash
+      if: inputs.modify_cache == 'false'
+      run: |
+        echo "## Restore cache" >> $GITHUB_STEP_SUMMARY
+    - name: Restore cache
+      if: inputs.modify_cache == 'false'
+      uses: actions/cache/restore@v3
+      with:
+        path: ${{ inputs.path }}
+        key: ${{ inputs.key }}
+        restore-keys: ${{ inputs.restore_keys }}

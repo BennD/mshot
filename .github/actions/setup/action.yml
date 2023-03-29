@@ -23,19 +23,21 @@ runs:
 
   steps:
     # Do setups that are only required for a specific OS
+    - shell: bash
+      run: echo "## Setup ${{ inputs.os }}" >> $GITHUB_STEP_SUMMARY
     - name: Setup ubuntu-latest
       if: inputs.os == 'ubuntu-latest'
       uses: ./.github/actions/setup/ubuntu-latest
-
     - name: Setup windows-latest
       if: inputs.os == 'windows-latest'
       uses: ./.github/actions/setup/windows-latest
-
     - name: Setup macos-latest
       if: inputs.os == 'macos-latest'
       uses: ./.github/actions/setup/macos-latest
 
     # Setup tools like rust, protoc, etc.
+    - shell: bash
+      run: echo "## Setup tools" >> $GITHUB_STEP_SUMMARY
     - name: Setup tools
       uses: ./.github/actions/tools
       with:

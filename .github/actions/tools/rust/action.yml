@@ -13,9 +13,9 @@ runs:
   using: "composite"
 
   steps:
+    # Setup cache
     - name: Setup rust cache
-      if: inputs.modify_cache == 'true'
-      uses: actions/cache@v3
+      uses: ./.github/actions/util/cache
       with:
         path: |
           ~/.cargo/registry/index/
@@ -25,20 +25,9 @@ runs:
         key: ${{ runner.os }}-rust-${{ inputs.rust }}-${{ hashFiles('**/Cargo.lock') }}
         restore-keys: |
           ${{ runner.os }}-rust-${{ inputs.rust }}-
+        modify_cache: ${{ inputs.modify_cache }}
 
-    - name: Restore rust cache
-      if: inputs.modify_cache == 'false'
-      uses: actions/cache/restore@v3
-      with:
-        path: |
-          ~/.cargo/registry/index/
-          ~/.cargo/registry/cache/
-          ~/.cargo/git/db/
-          target/
-        key: ${{ runner.os }}-rust-${{ inputs.rust }}-${{ hashFiles('**/Cargo.lock') }}
-        restore-keys: |
-          ${{ runner.os }}-rust-${{ inputs.rust }}-
-
+    # Install rust
     - name: Install rust ${{ inputs.rust }}
       uses: dtolnay/rust-toolchain@master
       with:

@@ -17,26 +17,16 @@ runs:
 
   steps:
     # Setup tool cache
-    - name: Ensure .local/bin exists
-      shell: bash
-      run: |
-        mkdir -p ~/.local/
-
+    - shell: bash
+      run: echo "## Setup tool cache" >> $GITHUB_STEP_SUMMARY
     - name: Setup tool cache
       if: inputs.modify_cache == 'true'
-      uses: actions/cache@v3
+      uses: ./.github/actions/util/cache
       with:
         path: |
           ~/.local/
         key: ${{ runner.os }}-tools
-
-    - name: Restore tool cache
-      if: inputs.modify_cache == 'false'
-      uses: actions/cache/restore@v3
-      with:
-        path: |
-          ~/.local/
-        key: ${{ runner.os }}-tools
+        modify_cache: ${{ inputs.modify_cache }}
 
     # Add ~/.local/bin to PATH
     - name: Add ~/.local/bin to PATH (Linux/macOS)
