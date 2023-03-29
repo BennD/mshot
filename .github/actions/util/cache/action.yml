@@ -30,12 +30,12 @@ runs:
         restore-keys: ${{ inputs.restore_keys }}
     - uses: ./.github/actions/util/log_task
       with:
-        success-message: "Setup cache"
+        success_message: "Setup cache"
     - uses: ./.github/actions/util/log_task
       with:
         success: ${{ steps.setup_cache.outputs.cache-hit }}
-        success-message: "Restored cache"
-        failure-message: "Failed to restore cache"
+        success_message: "Restored cache"
+        failure_message: "Failed to restore cache"
 
     # Restore cache
     - name: Restore cache
@@ -49,5 +49,5 @@ runs:
     - uses: ./.github/actions/util/log_task
       with:
         success: ${{ steps.restore_cache.outputs.cache-hit }}
-        success-message: "Restored cache"
-        failure-message: "Failed to restore cache"
+        success_message: "Restored cache"
+        failure_message: "Failed to restore cache"

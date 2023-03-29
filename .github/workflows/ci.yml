@@ -7,7 +7,12 @@ env:
   CARGO_INCREMENTAL: 1
   RUST_BACKTRACE: full
 
+defaults:
+  run:
+    shell: bash
+
 jobs:
+  # Build job
   build:
     name: Build (${{ matrix.os }}|${{ matrix.rust }})
     runs-on: ${{ matrix.os }}
@@ -19,9 +24,13 @@ jobs:
         rust: [ stable ]
 
     steps:
+      # Checkout
+      - run: echo "# Checkout" >> $GITHUB_STEP_SUMMARY
       - name: Checkout
         uses: actions/checkout@v3
 
+      # Setup runner
+      - run: echo "# Setup runner" >> $GITHUB_STEP_SUMMARY
       - name: Setup runner
         uses: ./.github/actions/setup
         with:
@@ -30,9 +39,13 @@ jobs:
           os: ${{ matrix.os }}
           rust: ${{ matrix.rust }}
 
+      # Build
+      - run: echo "# Build" >> $GITHUB_STEP_SUMMARY
       - name: Build
         run: cargo build --all --verbose --release
 
+      # Upload artifacts
+      - run: echo "# Upload artifacts" >> $GITHUB_STEP_SUMMARY
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
         with:
@@ -43,6 +56,7 @@ jobs:
             !**/*.d
 
 
+  # Test job
   test:
     name: Test (${{ matrix.os }}|${{ matrix.rust }})
     needs: build
@@ -55,9 +69,13 @@ jobs:
         rust: [ stable ]
 
     steps:
+      # Checkout
+      - run : echo "# Checkout" >> $GITHUB_STEP_SUMMARY
       - name: Checkout
         uses: actions/checkout@v3
 
+      # Setup runner
+      - run: echo "# Setup runner" >> $GITHUB_STEP_SUMMARY
       - name: Setup runner
         uses: ./.github/actions/setup
         with:
@@ -65,40 +83,56 @@ jobs:
           os: ${{ matrix.os }}
           rust: ${{ matrix.rust }}
 
+      # Test
+      - run: echo "# Test" >> $GITHUB_STEP_SUMMARY
       - name: Test
         run: cargo test --all --verbose --release
 
 
+  # Clippy job
   clippy:
     name: Clippy
     needs: build
     runs-on: ubuntu-latest
 
     steps:
+      # Checkout
+      - run : echo "# Checkout" >> $GITHUB_STEP_SUMMARY
       - name: Checkout
         uses: actions/checkout@v3
 
+      # Setup runner
+      - run: echo "# Setup runner" >> $GITHUB_STEP_SUMMARY
       - name: Setup runner
         uses: ./.github/actions/setup
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
+      # Clippy
+      - run: echo "# Clippy" >> $GITHUB_STEP_SUMMARY
       - name: Clippy
         run: cargo clippy --all --verbose --release
 
 
-  fmt:
-    name: Fmt
+  # Fmt job
+  check_fmt:
+    name: Check Formatting
     runs-on: ubuntu-latest
 
     steps:
+      # Checkout
+      - run : echo "# Checkout" >> $GITHUB_STEP_SUMMARY
       - name: Checkout
         uses: actions/checkout@v3
 
+      # Setup runner
+      - run: echo "# Setup runner" >> $GITHUB_STEP_SUMMARY
       - name: Setup runner
         uses: ./.github/actions/setup
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
+      # Check formatting
+      - run : echo "# Check formatting" >> $GITHUB_STEP_SUMMARY
       - name: Fmt
         run: cargo fmt --check
