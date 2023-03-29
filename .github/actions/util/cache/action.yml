@@ -28,14 +28,14 @@ runs:
         path: ${{ inputs.path }}
         key: ${{ inputs.key }}
         restore-keys: ${{ inputs.restore_keys }}
-    - shell: bash
-      run: echo "- [x] Setup cache" >> $GITHUB_STEP_SUMMARY
-    - if: steps.setup_cache.outputs.cache-hit == 'true'
-      shell: bash
-      run: echo "- [x] Restore cache" >> $GITHUB_STEP_SUMMARY
-    - if: steps.setup_cache.outputs.cache-hit == 'false'
-      shell: bash
-      run: echo "- [ ] Failed to restore cache" >> $GITHUB_STEP_SUMMARY
+    - uses: ./.github/actions/util/log_task
+      with:
+        success-message: "Setup cache"
+    - uses: ./.github/actions/util/log_task
+      with:
+        success: ${{ steps.setup_cache.outputs.cache-hit }}
+        success-message: "Restored cache"
+        failure-message: "Failed to restore cache"
 
     # Restore cache
     - name: Restore cache
@@ -46,9 +46,8 @@ runs:
         path: ${{ inputs.path }}
         key: ${{ inputs.key }}
         restore-keys: ${{ inputs.restore_keys }}
-    - if: steps.restore_cache.outputs.cache-hit == 'true'
-      shell: bash
-      run: echo "- [x] Restore cache" >> $GITHUB_STEP_SUMMARY
-    - if: steps.restore_cache.outputs.cache-hit == 'false'
-      shell: bash
-      run: echo "- [ ] Failed to restore cache" >> $GITHUB_STEP_SUMMARY
+    - uses: ./.github/actions/util/log_task
+      with:
+        success: ${{ steps.restore_cache.outputs.cache-hit }}
+        success-message: "Restored cache"
+        failure-message: "Failed to restore cache"
