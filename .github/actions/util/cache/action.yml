@@ -16,31 +16,39 @@ inputs:
     required: false
 
 runs:
-  using : "composite"
+  using: "composite"
 
   steps:
     # Setup cache
-    - shell: bash
-      if: inputs.modify_cache == 'true'
-      run: |
-        echo "## Setup cache" >> $GITHUB_STEP_SUMMARY
     - name: Setup cache
+      id: setup_cache
       if: inputs.modify_cache == 'true'
       uses: actions/cache@v3
       with:
         path: ${{ inputs.path }}
         key: ${{ inputs.key }}
         restore-keys: ${{ inputs.restore_keys }}
+    - shell: bash
+      run: echo "- [x] Setup cache" >> $GITHUB_STEP_SUMMARY
+    - if: steps.setup_cache.outputs.cache-hit == 'true'
+      shell: bash
+      run: echo "- [x] Restore cache" >> $GITHUB_STEP_SUMMARY
+    - if: steps.setup_cache.outputs.cache-hit == 'false'
+      shell: bash
+      run: echo "- [ ] Failed to restore cache" >> $GITHUB_STEP_SUMMARY
 
     # Restore cache
-    - shell: bash
-      if: inputs.modify_cache == 'false'
-      run: |
-        echo "## Restore cache" >> $GITHUB_STEP_SUMMARY
     - name: Restore cache
+      id: restore_cache
       if: inputs.modify_cache == 'false'
       uses: actions/cache/restore@v3
       with:
         path: ${{ inputs.path }}
         key: ${{ inputs.key }}
         restore-keys: ${{ inputs.restore_keys }}
+    - if: steps.restore_cache.outputs.cache-hit == 'true'
+      shell: bash
+      run: echo "- [x] Restore cache" >> $GITHUB_STEP_SUMMARY
+    - if: steps.restore_cache.outputs.cache-hit == 'false'
+      shell: bash
+      run: echo "- [ ] Failed to restore cache" >> $GITHUB_STEP_SUMMARY

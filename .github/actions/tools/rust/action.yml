@@ -23,7 +23,7 @@ runs:
           ~/.cargo/git/db/
           target/
         key: ${{ runner.os }}-rust-${{ inputs.rust }}-${{ hashFiles('**/Cargo.lock') }}
-        restore-keys: |
+        restore_keys: |
           ${{ runner.os }}-rust-${{ inputs.rust }}-
         modify_cache: ${{ inputs.modify_cache }}
 
