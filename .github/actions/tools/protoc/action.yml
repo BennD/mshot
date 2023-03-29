@@ -35,7 +35,7 @@ runs:
           exit 1
         fi
       
-        // Save release information
+        # Save release information
         echo "::set-output name=download_url::$download_url"
         echo "::set-output name=release_version::$release_version"
 
