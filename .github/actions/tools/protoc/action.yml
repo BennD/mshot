@@ -66,9 +66,9 @@ runs:
         curl -H "Authorization: token ${{ inputs.github_token }}" -L ${{ steps.release_info.outputs.download_url }} -o $RUNNER_TEMP/protoc.zip
         unzip $RUNNER_TEMP/protoc.zip -d ~/.local/protoc
 
-    # Register protoc
-    - name: Register protoc
-      uses: ./.github/actions/util/register_program
+    # Add protoc to path
+    - name: Add protoc to path
+      uses: ./.github/actions/util/add_to_path
       with:
-        program: protoc
-        path: ${HOME}/.local/protoc/bin/
+        path: |
+          ${HOME}/.local/protoc/bin

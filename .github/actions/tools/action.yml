@@ -16,17 +16,11 @@ runs:
   using: "composite"
 
   steps:
-    # Ensure that ~/.local/bin exists
-    - name: Ensure that ~/.local/bin exists
+    # Ensure that ~/.local
+    - name: Ensure that ~/.local
       shell: bash
       run: |
-        mkdir -p ~/.local/bin
-
-    # Add ~/.local/bin to PATH
-    - name: Add ~/.local/bin to PATH
-      uses: ./.github/actions/util/add_to_path
-      with:
-        path: ${HOME}/.local/bin
+        mkdir -p ~/.local
 
     # Install rust
     - name: Install rust ${{ inputs.rust }}
