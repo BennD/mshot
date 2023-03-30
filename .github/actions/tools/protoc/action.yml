@@ -65,7 +65,6 @@ runs:
         # Download and extract into ~/.local
         curl -H "Authorization: token ${{ inputs.github_token }}" -L ${{ steps.release_info.outputs.download_url }} -o $RUNNER_TEMP/protoc.zip
         unzip $RUNNER_TEMP/protoc.zip -d ~/.local/protoc
-        ln -s ~/.local/protoc/bin/protoc ~/.local/bin/protoc
 
     # Register protoc
     - name: Register protoc
