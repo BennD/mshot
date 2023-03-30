@@ -36,8 +36,8 @@ runs:
         fi
       
         # Save release information
-        echo "::set-output name=download_url::$download_url"
-        echo "::set-output name=release_version::$release_version"
+        echo "release_version=$release_version" >> GITHUB_ENV
+        echo "download_url=$download_url" >> GITHUB_ENV
 
     # Setup protoc cache
     - name: Setup protoc cache
@@ -63,6 +63,6 @@ runs:
       shell: bash
       run: |
         # Download and extract into ~/.local
-        curl -H "Authorization: token ${{ inputs.github_token }}" -L $download_url -o $RUNNER_TEMP/protoc.zip
+        curl -H "Authorization: token ${{ inputs.github_token }}" -L ${{ steps.release_info.outputs.download_url }} -o $RUNNER_TEMP/protoc.zip
         unzip $RUNNER_TEMP/protoc.zip -d ~/.local/protoc
         ln -s ~/.local/protoc/bin/protoc ~/.local/bin/protoc
