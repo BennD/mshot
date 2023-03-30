@@ -34,7 +34,7 @@ runs:
           echo "Unknown OS"
           exit 1
         fi
-      
+        
         # Save release information
         echo "release_version=$release_version" >> $GITHUB_OUTPUT
         echo "download_url=$download_url" >> $GITHUB_OUTPUT
@@ -66,3 +66,10 @@ runs:
         curl -H "Authorization: token ${{ inputs.github_token }}" -L ${{ steps.release_info.outputs.download_url }} -o $RUNNER_TEMP/protoc.zip
         unzip $RUNNER_TEMP/protoc.zip -d ~/.local/protoc
         ln -s ~/.local/protoc/bin/protoc ~/.local/bin/protoc
+
+    # Register protoc
+    - name: Register protoc
+      uses: ./.github/actions/util/register_program
+      with:
+        program: protoc
+        path: ${HOME}/.local/protoc/bin/

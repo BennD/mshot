@@ -1,0 +1,26 @@
+name: register_program
+description: Create symbolic link to program
+
+inputs:
+  program:
+    description: 'Program to register'
+    required: true
+  path:
+    description: 'Directory to add to PATH'
+    required: true
+
+runs:
+  using: "composite"
+
+  steps:
+    - name: Create symbolic link to program (Linux/macOS)
+      if: runner.os == 'Linux' || runner.os == 'macOS'
+      shell: bash
+      run: |
+        ln -s ${{ inputs.path }}${{ inputs.program }} ~/.local/bin/${{ inputs.program }}
+
+    - name: Create symbolic link to program (Windows)
+      if: runner.os == 'Windows'
+      shell: powershell
+      run: |
+        New-Item -ItemType SymbolicLink -Path $env:USERPROFILE\AppData\Local\Microsoft\WindowsApps\${{ inputs.program }} -Value ${{ inputs.path }}${{ inputs.program }} -Force
