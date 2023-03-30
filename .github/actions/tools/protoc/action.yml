@@ -36,8 +36,8 @@ runs:
         fi
       
         # Save release information
-        echo "release_version=$release_version" >> GITHUB_ENV
-        echo "download_url=$download_url" >> GITHUB_ENV
+        echo "release_version=$release_version" >> GITHUB_OUTPUT
+        echo "download_url=$download_url" >> GITHUB_OUTPUT
 
     # Setup protoc cache
     - name: Setup protoc cache

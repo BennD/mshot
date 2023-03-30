@@ -50,9 +50,10 @@ runs:
       shell: bash
       run: |
         if [[ "${{ steps.restore_cache.outputs.cache-hit }}" == "true" ]]; then
-          echo "::set-output name=cache_hit::true"
+          cache_hit=true
         elif [[ "${{ steps.setup_cache.outputs.cache-hit }}" == "true" ]]; then
-          echo "::set-output name=cache_hit::true"
+          cache_hit=true
         else
-          echo "::set-output name=cache_hit::false"
+          cache_hit=false
         fi
+        echo "cache_hit=$cache_hit" >> $GITHUB_OUTPUT
