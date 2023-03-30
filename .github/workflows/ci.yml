@@ -108,6 +108,7 @@ jobs:
   check_fmt:
     name: Check Formatting
     runs-on: ubuntu-latest
+    needs: build # This is required to ensure that the cache is populated
 
     steps:
       # Checkout
