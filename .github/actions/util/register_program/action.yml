@@ -23,4 +23,4 @@ runs:
       if: runner.os == 'Windows'
       shell: powershell
       run: |
-        New-Item -ItemType SymbolicLink -Path $env:USERPROFILE\AppData\Local\Microsoft\WindowsApps\${{ inputs.program }} -Value ${{ inputs.path }}${{ inputs.program }} -Force
+        New-Item -ItemType SymbolicLink -Path $env:USERPROFILE\AppData\Local\Microsoft\WindowsApps\${{ inputs.program }}.exe -Value ${{ inputs.path }}${{ inputs.program }}.exe -Force
