@@ -27,10 +27,10 @@ runs:
     - name: DEBUG print inputs
       shell: bash
       run: |
-        echo path ${{ inputs.path }}
-        echo key ${{ inputs.key }}
-        echo modify_cache ${{ inputs.modify_cache }}
-        echo restore_keys ${{ inputs.restore_keys }}
+        echo "path ${{ inputs.path }}"
+        echo "key ${{ inputs.key }}"
+        echo "modify_cache ${{ inputs.modify_cache }}"
+        echo "restore_keys ${{ inputs.restore_keys }}"
 
     # Setup cache
     - name: Setup cache
