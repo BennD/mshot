@@ -36,7 +36,6 @@ runs:
 
     # Setup cache
     - name: Setup cache
-      id: setup_cache
       if: inputs.modify_cache == 'true' && inputs.restore_keys == ''
       uses: actions/cache@v3
       with:
