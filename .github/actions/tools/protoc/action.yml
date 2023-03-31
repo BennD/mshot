@@ -38,18 +38,25 @@ runs:
         # Save release information
         echo "release_version=$release_version" >> $GITHUB_OUTPUT
         echo "download_url=$download_url" >> $GITHUB_OUTPUT
-        
-        mkdir -p ~/.local/protoc
 
     # Setup protoc cache
-    - name: Setup protoc cache
-      id: setup_protoc_cache
-      uses: ./.github/actions/util/cache
+    #    - name: Setup protoc cache
+    #      id: setup_protoc_cache
+    #      uses: ./.github/actions/util/cache
+    #      with:
+    #        path: |
+    #          ~/.local/protoc/
+    #        key: ${{ runner.os }}-protoc-${{ steps.release_info.outputs.release_version }}
+    #        modify_cache: ${{ inputs.modify_cache }}
+
+    # Setup protoc cache
+    - name: Restore protoc cache
+      id: restore_protoc_cache
+      uses: actions/cache@v3
       with:
         path: |
           ~/.local/protoc/
         key: ${{ runner.os }}-protoc-${{ steps.release_info.outputs.release_version }}
-        modify_cache: ${{ inputs.modify_cache }}
 
     # Fail in case of no cache hit and no right to modify cache
     - name: Fail in case of no cache hit and no right to modify cache
