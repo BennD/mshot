@@ -46,7 +46,7 @@ runs:
       with:
         path: |
           ~/.local/protoc/
-        key: ${{ runner.os }}-protoc-${{ steps.release_info.outputs.release_version }}
+        key: protoc-${{ runner.os }}-${{ steps.release_info.outputs.release_version }}
         modify_cache: ${{ inputs.modify_cache }}
 
     # Setup protoc cache

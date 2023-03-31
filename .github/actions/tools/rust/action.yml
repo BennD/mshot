@@ -22,7 +22,7 @@ runs:
           ~/.cargo/registry/cache/
           ~/.cargo/git/db/
           target/
-        key: ${{ runner.os }}-rust-${{ inputs.rust }}-${{ hashFiles('**/Cargo.lock') }}
+        key: rust-${{ runner.os }}-${{ inputs.rust }}-${{ hashFiles('**/Cargo.lock') }}
         restore_keys: |
           ${{ runner.os }}-rust-${{ inputs.rust }}-
         modify_cache: ${{ inputs.modify_cache }}
