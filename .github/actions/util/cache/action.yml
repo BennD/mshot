@@ -19,7 +19,7 @@ inputs:
 outputs:
   cache_hit:
     description: 'Cache hit'
-    value: ${{ steps.cache_hit_check.outputs.cache-hit }}
+    value: ${{ steps.cache_hit_check.outputs.cache_hit }}
 
 runs:
   using: "composite"
