@@ -25,16 +25,19 @@ runs:
   using: "composite"
 
   steps:
-    # Setup cache
+    # Setup cache (with restore keys)
     - name: Setup cache
       id: setup_cache
       if: inputs.modify_cache == 'true' && inputs.restore_keys != ''
       uses: actions/cache@v3
       with:
-        path: ${{ inputs.path }}
+        path: |
+          ${{ inputs.path }}
         key: ${{ inputs.key }}
-        restore-keys: ${{ inputs.restore_keys }}
+        restore-keys: |
+          ${{ inputs.restore_keys }}
 
+    # Setup cache (without restore keys)
     - name: Setup cache
       id: setup_cache2
       if: inputs.modify_cache == 'true' && inputs.restore_keys == ''
@@ -43,8 +46,6 @@ runs:
         path: |
           ${{ inputs.path }}
         key: ${{ inputs.key }}
-        restore-keys: |
-          ${{ inputs.restore_keys }}
 
     # Restore cache
     - name: Restore cache
