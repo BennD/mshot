@@ -31,10 +31,10 @@ runs:
       if: inputs.modify_cache == 'true' && inputs.restore_keys != ''
       uses: actions/cache@v3
       with:
-        path: |
+        path: |-
           ${{ inputs.path }}
         key: ${{ inputs.key }}
-        restore-keys: |
+        restore-keys: |-
           ${{ inputs.restore_keys }}
 
     # Setup cache (without restore keys)
@@ -43,7 +43,7 @@ runs:
       if: inputs.modify_cache == 'true' && inputs.restore_keys == ''
       uses: actions/cache@v3
       with:
-        path: |
+        path: |-
           ${{ inputs.path }}
         key: ${{ inputs.key }}
 
