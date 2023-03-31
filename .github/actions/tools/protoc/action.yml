@@ -44,7 +44,7 @@ runs:
       id: setup_protoc_cache
       uses: ./.github/actions/util/cache
       with:
-        path: |
+        path: |-
           ~/.local/protoc/
         key: protoc-${{ runner.os }}-${{ steps.release_info.outputs.release_version }}
         modify_cache: ${{ inputs.modify_cache }}

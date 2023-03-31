@@ -17,13 +17,13 @@ runs:
     - name: Setup rust cache
       uses: ./.github/actions/util/cache
       with:
-        path: |
+        path: |-
           ~/.cargo/registry/index/
           ~/.cargo/registry/cache/
           ~/.cargo/git/db/
           target/
         key: rust-${{ runner.os }}-${{ inputs.rust }}-${{ hashFiles('**/Cargo.lock') }}
-        restore_keys: |
+        restore_keys: |-
           ${{ runner.os }}-rust-${{ inputs.rust }}-
         modify_cache: ${{ inputs.modify_cache }}
 
