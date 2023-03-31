@@ -24,23 +24,22 @@ runs:
   using: "composite"
 
   steps:
+    - shell: bash
+      run: |
+        echo path: ${{ inputs.path }}
+        echo key: ${{ inputs.key }}
+        echo modify_cache: ${{ inputs.modify_cache }}
+        echo restore_keys: ${{ inputs.restore_keys }}
+
     # Setup cache
     - name: Setup cache
       id: setup_cache
-      if: inputs.modify_cache == 'true' && inputs.restore_keys != ''
+      if: inputs.modify_cache == 'true'
       uses: actions/cache@v3
       with:
         path: ${{ inputs.path }}
         key: ${{ inputs.key }}
         restore-keys: ${{ inputs.restore_keys }}
-
-    # Setup cache
-    - name: Setup cache
-      if: inputs.modify_cache == 'true' && inputs.restore_keys == ''
-      uses: actions/cache@v3
-      with:
-        path: ${{ inputs.path }}
-        key: ${{ inputs.key }}
 
     # Restore cache
     - name: Restore cache
