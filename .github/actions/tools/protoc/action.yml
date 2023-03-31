@@ -38,6 +38,8 @@ runs:
         # Save release information
         echo "release_version=$release_version" >> $GITHUB_OUTPUT
         echo "download_url=$download_url" >> $GITHUB_OUTPUT
+        
+        mkdir -p ~/.local/protoc
 
     # Setup protoc cache
     - name: Setup protoc cache
