@@ -13,6 +13,7 @@ inputs:
     required: true
   restore_keys:
     description: 'Cache restore keys'
+    default: ''
     required: false
 
 outputs:
@@ -27,7 +28,16 @@ runs:
     # Setup cache
     - name: Setup cache
       id: setup_cache
-      if: inputs.modify_cache == 'true'
+      if: inputs.modify_cache == 'true' && inputs.restore_keys != ''
+      uses: actions/cache@v3
+      with:
+        path: ${{ inputs.path }}
+        key: ${{ inputs.key }}
+        restore-keys: ${{ inputs.restore_keys }}
+
+    - name: Setup cache
+      id: setup_cache2
+      if: inputs.modify_cache == 'true' && inputs.restore_keys == ''
       uses: actions/cache@v3
       with:
         path: ${{ inputs.path }}
@@ -52,6 +62,8 @@ runs:
         if [[ "${{ steps.restore_cache.outputs.cache-hit }}" == "true" ]]; then
           cache_hit=true
         elif [[ "${{ steps.setup_cache.outputs.cache-hit }}" == "true" ]]; then
+          cache_hit=true
+        elif [[ "${{ steps.setup_cache2.outputs.cache-hit }}" == "true" ]]; then
           cache_hit=true
         else
           cache_hit=false
