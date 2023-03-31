@@ -69,5 +69,4 @@ runs:
     - name: Add protoc to path
       uses: ./.github/actions/util/add_to_path
       with:
-        path: |
-          ${HOME}/.local/protoc/bin
+        path: ${HOME}/.local/protoc/bin
