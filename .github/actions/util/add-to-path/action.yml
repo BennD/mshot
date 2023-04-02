@@ -13,27 +13,10 @@ runs:
     - name: Add directory to PATH (Linux/macOS)
       if: runner.os == 'Linux' || runner.os == 'macOS'
       shell: bash
-      run: |
-        echo "${{ inputs.path }}" >> $GITHUB_PATH
-
-    # TODO remove unnecessary steps
-    - name: Add directory to PATH (Windows)
-      if: runner.os == 'Windows'
-      shell: powershell
-      run: |
-        echo "${{ inputs.path }}"
-        echo "${{ inputs.path }}" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+      run: echo "${{ inputs.path }}" >> $GITHUB_PATH
 
     - name: Add directory to PATH (Windows)
       if: runner.os == 'Windows'
       shell: pwsh
-      run: |
-        echo "${{ inputs.path }}"
-        echo "${{ inputs.path }}" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
-
-    - name: Add directory to PATH (Windows)
-      if: runner.os == 'Windows'
-      shell: pwsh
-      run: |
-        echo "${{ inputs.path }}"
+      run: | # Multi-line to silence incorrect CLion warning
         "${{ inputs.path }}" >> $env:GITHUB_PATH
