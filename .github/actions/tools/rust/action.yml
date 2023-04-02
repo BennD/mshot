@@ -18,9 +18,9 @@ runs:
       uses: actions/cache@v3
       with:
         path: |
-          ~/.cargo/registry
-          ~/.cargo/git
-          target
+          ~/.cargo/registry/
+          ~/.cargo/git/
+          target/
         key: rust-build-${{ runner.os }}-${{ hashFiles('**/Cargo.lock') }}
 
     # Restore build cache
@@ -29,9 +29,9 @@ runs:
       uses: actions/cache/restore@v3
       with:
         path: |
-          ~/.cargo/registry
-          ~/.cargo/git
-          target
+          ~/.cargo/registry/
+          ~/.cargo/git/
+          target/
         key: rust-build-${{ runner.os }}-${{ hashFiles('**/Cargo.lock') }}
         fail-on-cache-miss: true
 
@@ -53,7 +53,7 @@ runs:
       id: setup_rust_cache
       uses: actions/cache@v3
       with:
-        path: ~/.cargo/bin
+        path: ~/.cargo/bin/
         key: rust-${{ runner.os }}-${{ steps.release_info.outputs.release_version }}
 
     # Restore rust cache
@@ -61,7 +61,7 @@ runs:
       id: restore_rust_cache
       uses: actions/cache/restore@v3
       with:
-        path: ~/.cargo/bin
+        path: ~/.cargo/bin/
         key: rust-${{ runner.os }}-${{ steps.release_info.outputs.release_version }}
         fail-on-cache-miss: true
 

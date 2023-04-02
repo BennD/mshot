@@ -43,7 +43,7 @@ runs:
       id: setup_protoc_cache
       uses: actions/cache@v3
       with:
-        path: ~/.local/protoc
+        path: ~/.local/protoc/
         key: protoc-${{ runner.os }}-${{ steps.release_info.outputs.release_version }}
 
     # Restore protoc cache
@@ -51,7 +51,7 @@ runs:
       id: restore_protoc_cache
       uses: actions/cache/restore@v3
       with:
-        path: ~/.local/protoc
+        path: ~/.local/protoc/
         key: protoc-${{ runner.os }}-${{ steps.release_info.outputs.release_version }}
         fail-on-cache-miss: true
 
