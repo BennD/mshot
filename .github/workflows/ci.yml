@@ -14,14 +14,13 @@ defaults:
 jobs:
   # Build job
   build:
-    name: Build (${{ matrix.os }}|${{ matrix.rust }})
+    name: Build (${{ matrix.os }})
     runs-on: ${{ matrix.os }}
 
     strategy:
       fail-fast: false
       matrix:
         os: [ ubuntu-latest, windows-latest, macos-latest ]
-        rust: [ stable ]
 
     steps:
       # Checkout
@@ -32,10 +31,9 @@ jobs:
       - name: Setup runner
         uses: ./.github/actions/setup
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          modify_cache: 'true'
+          github-token: ${{ secrets.github-token }}
+          create-cache: 'true'
           os: ${{ matrix.os }}
-          rust: ${{ matrix.rust }}
 
       # Build
       - name: Build
@@ -54,7 +52,7 @@ jobs:
 
   # Test job
   test:
-    name: Test (${{ matrix.os }}|${{ matrix.rust }})
+    name: Test (${{ matrix.os }})
     needs: build
     runs-on: ${{ matrix.os }}
 
@@ -62,7 +60,6 @@ jobs:
       fail-fast: false
       matrix:
         os: [ ubuntu-latest, windows-latest, macos-latest ]
-        rust: [ stable ]
 
     steps:
       # Checkout
@@ -73,9 +70,8 @@ jobs:
       - name: Setup runner
         uses: ./.github/actions/setup
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          github-token: ${{ secrets.github-token }}
           os: ${{ matrix.os }}
-          rust: ${{ matrix.rust }}
 
       # Test
       - name: Test
@@ -97,7 +93,7 @@ jobs:
       - name: Setup runner
         uses: ./.github/actions/setup
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          github-token: ${{ secrets.github-token }}
 
       # Clippy
       - name: Clippy
@@ -119,7 +115,7 @@ jobs:
       - name: Setup runner
         uses: ./.github/actions/setup
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          github-token: ${{ secrets.github-token }}
 
       # Check formatting
       - name: Fmt

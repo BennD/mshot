@@ -2,13 +2,10 @@ name: tools
 description: Install tools
 
 inputs:
-  modify_cache:
+  create-cache:
     description: 'Installs required build tools and updates cache'
     required: true
-  rust:
-    description: 'Rust toolchain'
-    required: true
-  github_token:
+  github-token:
     description: 'GitHub token'
     required: true
 
@@ -16,22 +13,16 @@ runs:
   using: "composite"
 
   steps:
-    # Ensure that ~/.local
-    - name: Ensure that ~/.local
-      shell: bash
-      run: |
-        mkdir -p ~/.local
-
     # Install rust
     - name: Install rust ${{ inputs.rust }}
       uses: ./.github/actions/tools/rust
       with:
-        rust: ${{ inputs.rust }}
-        modify_cache: ${{ inputs.modify_cache }}
+        github-token: ${{ inputs.github-token }}
+        create-cache: ${{ inputs.create-cache }}
 
     # Install protoc
     - name: Install protoc
       uses: ./.github/actions/tools/protoc
       with:
-        github_token: ${{ inputs.github_token }}
-        modify_cache: ${{ inputs.modify_cache }}
+        github-token: ${{ inputs.github-token }}
+        create-cache: ${{ inputs.create-cache }}

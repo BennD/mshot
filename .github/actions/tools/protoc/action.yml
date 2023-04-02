@@ -1,12 +1,12 @@
-name: install-protoc
-description: Install protoc
+name: protoc
+description: Make protoc available on the path
 
 inputs:
-  github_token:
-    description: 'GitHub token'
+  github-token:
+    description: 'GitHub token - used to bypass rate limits'
     required: true
-  modify_cache:
-    description: 'Decides if cache should be modified or restored only'
+  create-cache:
+    description: 'Create cache in case it does not exist'
     required: true
 
 runs:
@@ -18,7 +18,7 @@ runs:
       shell: bash
       run: |
         # Cache release website
-        curl -H "Authorization: token ${{ inputs.github_token }}" -s https://api.github.com/repos/protocolbuffers/protobuf/releases/latest > $RUNNER_TEMP/protobuf-release.json
+        curl -H "Authorization: token ${{ inputs.github-token }}" -s https://api.github.com/repos/protocolbuffers/protobuf/releases/latest > $RUNNER_TEMP/protobuf-release.json
         
         # Get latest release version
         release_version=$(cat $RUNNER_TEMP/protobuf-release.json | grep "tag_name" | grep -oE '[0-9]+\.[0-9]+(\.[0-9]+)?')
@@ -41,42 +41,34 @@ runs:
 
     # Setup protoc cache
     - name: Setup protoc cache
+      if: inputs.create-cache == 'true'
       id: setup_protoc_cache
-      uses: ./.github/actions/util/cache
+      uses: actions/cache@v3
       with:
-        path: |-
-          ~/.local/protoc/
+        path: ~/.local/protoc
         key: protoc-${{ runner.os }}-${{ steps.release_info.outputs.release_version }}
-        modify_cache: ${{ inputs.modify_cache }}
 
-    # Setup protoc cache
-#    - name: Restore protoc cache
-#      id: restore_protoc_cache
-#      uses: actions/cache@v3
-#      with:
-#        path: |
-#          ~/.local/protoc/
-#        key: ${{ runner.os }}-protoc-${{ steps.release_info.outputs.release_version }}
-
-    # Fail in case of no cache hit and no right to modify cache
-    - name: Fail in case of no cache hit and no right to modify cache
-      if: steps.setup_protoc_cache.outputs.cache_hit != 'true' && inputs.modify_cache == 'false'
-      shell: bash
-      run: |
-        echo "No cache hit and no right to modify cache"
-        exit 1
+    # Restore protoc cache
+    - name: Restore protoc cache
+      if: inputs.create-cache == 'false'
+      id: restore_protoc_cache
+      uses: actions/cache/restore@v3
+      with:
+        path: ~/.local/protoc/
+        key: protoc-${{ runner.os }}-${{ steps.release_info.outputs.release_version }}
+        fail-on-cache-miss: true
 
     # Install protoc
     - name: Download protoc from https://github.com/protocolbuffers/protobuf/releases
-      if: steps.setup_protoc_cache.outputs.cache_hit != 'true'
+      if: steps.setup_protoc_cache.outputs.cache-hit == 'false' && steps.restore_protoc_cache.outputs.cache-hit == 'false'
       shell: bash
       run: |
         # Download and extract into ~/.local
-        curl -H "Authorization: token ${{ inputs.github_token }}" -L ${{ steps.release_info.outputs.download_url }} -o $RUNNER_TEMP/protoc.zip
+        curl -H "Authorization: token ${{ inputs.github-token }}" -L ${{ steps.release_info.outputs.download_url }} -o $RUNNER_TEMP/protoc.zip
         unzip $RUNNER_TEMP/protoc.zip -d ~/.local/protoc
 
     # Add protoc to path
     - name: Add protoc to path
-      uses: ./.github/actions/util/add_to_path
+      uses: ./.github/actions/util/add-to-path
       with:
-        path: ${HOME}/.local/protoc/bin
+        path: $HOME/.local/protoc/bin

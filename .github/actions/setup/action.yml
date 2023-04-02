@@ -2,21 +2,17 @@ name: setup
 description: Setup runner
 
 inputs:
-  modify_cache:
-    description: 'Decides if cache should be modified or restored only'
+  github-token:
+    description: 'GitHub token'
+    required: true
+  create-cache:
+    description: 'Creates the cache in case it does not exist'
     required: false
     default: 'false'
-  rust:
-    description: 'Rust version'
-    required: false
-    default: 'stable'
   os:
     description: 'Operating system'
     required: false
     default: 'ubuntu-latest'
-  github_token:
-    description: 'GitHub token'
-    required: true
 
 runs:
   using: "composite"
@@ -37,6 +33,5 @@ runs:
     - name: Setup tools
       uses: ./.github/actions/tools
       with:
-        modify_cache: ${{ inputs.modify_cache }}
-        rust: ${{ inputs.rust }}
-        github_token: ${{ inputs.github_token }}
+        create-cache: ${{ inputs.create-cache }}
+        github-token: ${{ inputs.github-token }}
