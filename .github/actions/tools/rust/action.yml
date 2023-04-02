@@ -71,7 +71,7 @@ runs:
 
     # Install rust in case no cache was found
     - name: Install rust
-      if: steps.restore_rust_cache.outputs.cache-hit == 'false' && steps.setup_rust_cache.outputs.cache-hit == 'false'
+      if: steps.restore_rust_cache.outputs.cache-hit != 'true' && steps.setup_rust_cache.outputs.cache-hit != 'true'
       shell: bash
       run: |
         # Download rustup-init

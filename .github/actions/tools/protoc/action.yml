@@ -60,7 +60,7 @@ runs:
 
     # Install protoc
     - name: Download protoc from https://github.com/protocolbuffers/protobuf/releases
-      if: steps.setup_protoc_cache.outputs.cache-hit == 'false' && steps.restore_protoc_cache.outputs.cache-hit == 'false'
+      if: steps.setup_protoc_cache.outputs.cache-hit != 'true' && steps.restore_protoc_cache.outputs.cache-hit != 'true'
       shell: bash
       run: |
         # Download and extract into ~/.local
