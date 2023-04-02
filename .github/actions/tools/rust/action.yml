@@ -14,14 +14,13 @@ runs:
 
   steps:
     # Setup build cache
-    - name: Setup rust build cache
-      if: inputs.create-cache == 'true'
+    - if: inputs.create-cache == 'true'
       uses: actions/cache@v3
       with:
         path: |
           ~/.cargo/registry
           ~/.cargo/git
-          target/
+          target
         key: rust-build-${{ runner.os }}-${{ hashFiles('**/Cargo.lock') }}
 
     # Restore build cache
@@ -32,13 +31,12 @@ runs:
         path: |
           ~/.cargo/registry
           ~/.cargo/git
-          target/
+          target
         key: rust-build-${{ runner.os }}-${{ hashFiles('**/Cargo.lock') }}
         fail-on-cache-miss: true
 
     # Gather release information
-    - name: Gather release information
-      id: release_info
+    - id: release_info
       shell: bash
       run: |
         # Cache release website
@@ -51,8 +49,7 @@ runs:
         echo "release_version=$release_version" >> $GITHUB_OUTPUT
 
     # Setup rust cache
-    - name: Setup rust cache
-      if: inputs.create-cache == 'true'
+    - if: inputs.create-cache == 'true'
       id: setup_rust_cache
       uses: actions/cache@v3
       with:
@@ -60,8 +57,7 @@ runs:
         key: rust-${{ runner.os }}-${{ steps.release_info.outputs.release_version }}
 
     # Restore rust cache
-    - name: Restore rust cache
-      if: inputs.create-cache == 'false'
+    - if: inputs.create-cache == 'false'
       id: restore_rust_cache
       uses: actions/cache/restore@v3
       with:
@@ -70,8 +66,7 @@ runs:
         fail-on-cache-miss: true
 
     # Install rust in case no cache was found
-    - name: Install rust
-      if: steps.restore_rust_cache.outputs.cache-hit != 'true' && steps.setup_rust_cache.outputs.cache-hit != 'true'
+    - if: steps.restore_rust_cache.outputs.cache-hit != 'true' && steps.setup_rust_cache.outputs.cache-hit != 'true'
       shell: bash
       run: |
         # Download rustup-init
@@ -81,7 +76,6 @@ runs:
         sh $RUNNER_TEMP/rustup-init.sh -y --no-modify-path --default-toolchain ${{ steps.release_info.outputs.release_version }} --component rustfmt clippy
 
     # Add rust to path
-    - name: Add rust to path
-      uses: ./.github/actions/util/add-to-path
+    - uses: ./.github/actions/util/add-to-path
       with:
         path: ~/.cargo/bin

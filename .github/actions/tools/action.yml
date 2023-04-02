@@ -13,16 +13,18 @@ runs:
   using: "composite"
 
   steps:
+    # Ensure ~/.local exists
+    - run: mkdir -p ~/.local
+      shell: bash
+
     # Install rust
-    - name: Install rust ${{ inputs.rust }}
-      uses: ./.github/actions/tools/rust
+    - uses: ./.github/actions/tools/rust
       with:
         github-token: ${{ inputs.github-token }}
         create-cache: ${{ inputs.create-cache }}
 
     # Install protoc
-    - name: Install protoc
-      uses: ./.github/actions/tools/protoc
+    - uses: ./.github/actions/tools/protoc
       with:
         github-token: ${{ inputs.github-token }}
         create-cache: ${{ inputs.create-cache }}

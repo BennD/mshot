@@ -13,8 +13,7 @@ runs:
   using: "composite"
   steps:
     # Gather release information
-    - name: Gather release information
-      id: release_info
+    - id: release_info
       shell: bash
       run: |
         # Cache release website
@@ -40,8 +39,7 @@ runs:
         echo "download_url=$download_url" >> $GITHUB_OUTPUT
 
     # Setup protoc cache
-    - name: Setup protoc cache
-      if: inputs.create-cache == 'true'
+    - if: inputs.create-cache == 'true'
       id: setup_protoc_cache
       uses: actions/cache@v3
       with:
@@ -49,8 +47,7 @@ runs:
         key: protoc-${{ runner.os }}-${{ steps.release_info.outputs.release_version }}
 
     # Restore protoc cache
-    - name: Restore protoc cache
-      if: inputs.create-cache == 'false'
+    - if: inputs.create-cache == 'false'
       id: restore_protoc_cache
       uses: actions/cache/restore@v3
       with:
@@ -59,8 +56,7 @@ runs:
         fail-on-cache-miss: true
 
     # Install protoc
-    - name: Download protoc from https://github.com/protocolbuffers/protobuf/releases
-      if: steps.setup_protoc_cache.outputs.cache-hit != 'true' && steps.restore_protoc_cache.outputs.cache-hit != 'true'
+    - if: steps.setup_protoc_cache.outputs.cache-hit != 'true' && steps.restore_protoc_cache.outputs.cache-hit != 'true'
       shell: bash
       run: |
         # Download and extract into ~/.local
@@ -68,7 +64,6 @@ runs:
         unzip $RUNNER_TEMP/protoc.zip -d ~/.local/protoc
 
     # Add protoc to path
-    - name: Add protoc to path
-      uses: ./.github/actions/util/add-to-path
+    - uses: ./.github/actions/util/add-to-path
       with:
         path: $HOME/.local/protoc/bin
