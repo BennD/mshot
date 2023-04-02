@@ -31,7 +31,7 @@ jobs:
       - name: Setup runner
         uses: ./.github/actions/setup
         with:
-          github-token: ${{ secrets.github-token }}
+          github-token: ${{ secrets.github_token }}
           create-cache: 'true'
           os: ${{ matrix.os }}
 
@@ -70,7 +70,7 @@ jobs:
       - name: Setup runner
         uses: ./.github/actions/setup
         with:
-          github-token: ${{ secrets.github-token }}
+          github-token: ${{ secrets.github_token }}
           os: ${{ matrix.os }}
 
       # Test
@@ -93,7 +93,7 @@ jobs:
       - name: Setup runner
         uses: ./.github/actions/setup
         with:
-          github-token: ${{ secrets.github-token }}
+          github-token: ${{ secrets.github_token }}
 
       # Clippy
       - name: Clippy
@@ -115,7 +115,7 @@ jobs:
       - name: Setup runner
         uses: ./.github/actions/setup
         with:
-          github-token: ${{ secrets.github-token }}
+          github-token: ${{ secrets.github_token }}
 
       # Check formatting
       - name: Fmt
