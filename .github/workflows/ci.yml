@@ -25,24 +25,20 @@ jobs:
 
     steps:
       # Checkout
-      - name: Checkout
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
       # Setup runner
-      - name: Setup runner
-        uses: ./.github/actions/setup
+      - uses: ./.github/actions/tools
         with:
           github-token: ${{ secrets.github_token }}
           create-cache: 'true'
           os: ${{ matrix.os }}
 
       # Build
-      - name: Build
-        run: cargo build --all --verbose --release
+      - run: cargo build --all --verbose --release
 
       # Upload artifacts
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v3
         with:
           name: ${{ matrix.os }}
           if-no-files-found: error
@@ -64,19 +60,16 @@ jobs:
 
     steps:
       # Checkout
-      - name: Checkout
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
       # Setup runner
-      - name: Setup runner
-        uses: ./.github/actions/setup
+      - uses: ./.github/actions/tools
         with:
           github-token: ${{ secrets.github_token }}
           os: ${{ matrix.os }}
 
       # Test
-      - name: Test
-        run: cargo test --all --verbose --release
+      - run: cargo test --all --verbose --release
 
 
   # Clippy job
@@ -87,18 +80,15 @@ jobs:
 
     steps:
       # Checkout
-      - name: Checkout
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
       # Setup runner
-      - name: Setup runner
-        uses: ./.github/actions/setup
+      - uses: ./.github/actions/tools
         with:
           github-token: ${{ secrets.github_token }}
 
       # Clippy
-      - name: Clippy
-        run: cargo clippy --all --verbose --release
+      - run: cargo clippy --all --verbose --release
 
 
   # Fmt job
@@ -109,15 +99,12 @@ jobs:
 
     steps:
       # Checkout
-      - name: Checkout
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
       # Setup runner
-      - name: Setup runner
-        uses: ./.github/actions/setup
+      - uses: ./.github/actions/tools
         with:
           github-token: ${{ secrets.github_token }}
 
       # Check formatting
-      - name: Fmt
-        run: cargo fmt --check
+      - run: cargo fmt --check
