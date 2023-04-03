@@ -29,3 +29,6 @@ runs:
       with:
         github-token: ${{ inputs.github-token }}
         create-cache: ${{ inputs.create-cache }}
+
+    # Install dbus
+    - uses: ./.github/actions/tools/dbus
