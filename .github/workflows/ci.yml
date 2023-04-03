@@ -3,8 +3,9 @@ name: Rust
 on: [ push ]
 
 env:
-  CARGO_TERM_COLOR: always
   CARGO_INCREMENTAL: 1
+  CARGO_REGISTRIES_CRATES_IO_PROTOCOL: git
+  CARGO_TERM_COLOR: always
   RUST_BACKTRACE: full
 
 defaults:
