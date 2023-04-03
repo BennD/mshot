@@ -2,13 +2,10 @@ name: tools
 description: Install tools
 
 inputs:
-  modify_cache:
+  create-cache:
     description: 'Installs required build tools and updates cache'
     required: true
-  rust:
-    description: 'Rust toolchain'
-    required: true
-  github_token:
+  github-token:
     description: 'GitHub token'
     required: true
 
@@ -16,50 +13,18 @@ runs:
   using: "composite"
 
   steps:
-    # Setup tool cache
-    - name: Ensure .local/bin exists
+    # Ensure ~/.local exists
+    - run: mkdir -p ~/.local
       shell: bash
-      run: |
-        mkdir -p ~/.local/
-
-    - name: Setup tool cache
-      if: inputs.modify_cache == 'true'
-      uses: actions/cache@v3
-      with:
-        path: |
-          ~/.local/
-        key: ${{ runner.os }}-tools
-
-    - name: Restore tool cache
-      if: inputs.modify_cache == 'false'
-      uses: actions/cache/restore@v3
-      with:
-        path: |
-          ~/.local/
-        key: ${{ runner.os }}-tools
-
-    # Add ~/.local/bin to PATH
-    - name: Add ~/.local/bin to PATH (Linux/macOS)
-      if: runner.os == 'Linux' || runner.os == 'macOS'
-      shell: bash
-      run: |
-        echo "$HOME/.local/bin" >> $GITHUB_PATH
-
-    - name: Add ~/.local/bin to PATH (Windows)
-      if: runner.os == 'Windows'
-      shell: powershell
-      run: |
-        echo "${HOME}/.local/bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
 
     # Install rust
-    - name: Install rust ${{ inputs.rust }}
-      uses: ./.github/actions/tools/rust
+    - uses: ./.github/actions/tools/rust
       with:
-        rust: ${{ inputs.rust }}
-        modify_cache: ${{ inputs.modify_cache }}
+        github-token: ${{ inputs.github-token }}
+        create-cache: ${{ inputs.create-cache }}
 
     # Install protoc
-    - name: Install protoc
-      uses: ./.github/actions/tools/protoc
+    - uses: ./.github/actions/tools/protoc
       with:
-        github_token: ${{ inputs.github_token }}
+        github-token: ${{ inputs.github-token }}
+        create-cache: ${{ inputs.create-cache }}

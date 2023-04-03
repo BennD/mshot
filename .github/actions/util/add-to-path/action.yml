@@ -1,0 +1,22 @@
+name: add-to-path
+description: Add directory to PATH
+
+inputs:
+  path:
+    description: 'Directory to add to PATH'
+    required: true
+
+runs:
+  using: "composite"
+
+  steps:
+    - name: Add directory to PATH (Linux/macOS)
+      if: runner.os == 'Linux' || runner.os == 'macOS'
+      shell: bash
+      run: echo "${{ inputs.path }}" >> $GITHUB_PATH
+
+    - name: Add directory to PATH (Windows)
+      if: runner.os == 'Windows'
+      shell: pwsh
+      run: | # Multi-line to silence incorrect CLion warning
+        "${{ inputs.path }}" >> $env:GITHUB_PATH
