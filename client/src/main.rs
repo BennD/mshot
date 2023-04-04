@@ -48,10 +48,12 @@ async fn main() -> Result<()> {
         return Err(anyhow!("No targets specified"));
     }
 
-    // Ensure output folder exists
-    if let Some(out) = &cli.out {
-        fs::create_dir_all(out)?;
-    }
+    // Create output path
+    let out = {
+        let mut out = cli.out.clone().unwrap_or_else(|| PathBuf::from("."));
+        out.push(chrono::Local::now().format("%Y-%m-%d_%H-%M-%S").to_string());
+        out
+    };
 
     // Spawn screenshot tasks into a JoinSet which can later be collected into a Vec
     let mut join_set = JoinSet::new();
@@ -83,18 +85,21 @@ async fn main() -> Result<()> {
         screenshots.push(screenshot);
     }
 
+    // Ensure output path exists
+    fs::create_dir_all(&out)?;
+
     // Save screenshots to disk
     for screenshot in screenshots {
         // Unwrap screenshot
         let (name, screenshot) =
             screenshot.map_err(|err| anyhow!("Screenshot task failed: {}", err))??;
 
-        // Create output path
-        let mut out = cli.out.clone().unwrap_or_else(|| PathBuf::from("."));
-        out.push(format!("{}.png", name));
-
-        // Write screenshot to disk
-        fs::write(out, screenshot.image)?;
+        // Write screenshot to disk with .png extension
+        let mut target_path = out.clone();
+        target_path.push(&name);
+        target_path.set_extension("png");
+        println!("Saving screenshot of {} to {}", name, target_path.display());
+        fs::write(target_path, screenshot.image)?;
     }
 
     Ok(())
