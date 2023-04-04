@@ -2,12 +2,13 @@ name: tools
 description: Install tools
 
 inputs:
-  create-cache:
-    description: 'Installs required build tools and updates cache'
-    required: true
   github-token:
     description: 'GitHub token'
     required: true
+  create-cache:
+    description: 'Creates the cache in case it does not exist'
+    required: false
+    default: 'false'
 
 runs:
   using: "composite"
@@ -28,3 +29,6 @@ runs:
       with:
         github-token: ${{ inputs.github-token }}
         create-cache: ${{ inputs.create-cache }}
+
+    # Install dbus
+    - uses: ./.github/actions/tools/dbus

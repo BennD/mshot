@@ -30,11 +30,10 @@ jobs:
 
       # Setup runner
       - name: Setup runner
-        uses: ./.github/actions/setup
+        uses: ./.github/actions/tools
         with:
           github-token: ${{ secrets.github_token }}
           create-cache: 'true'
-          os: ${{ matrix.os }}
 
       # Build
       - name: Build
@@ -69,10 +68,9 @@ jobs:
 
       # Setup runner
       - name: Setup runner
-        uses: ./.github/actions/setup
+        uses: ./.github/actions/tools
         with:
           github-token: ${{ secrets.github_token }}
-          os: ${{ matrix.os }}
 
       # Test
       - name: Test
@@ -92,7 +90,7 @@ jobs:
 
       # Setup runner
       - name: Setup runner
-        uses: ./.github/actions/setup
+        uses: ./.github/actions/tools
         with:
           github-token: ${{ secrets.github_token }}
 
@@ -114,10 +112,10 @@ jobs:
 
       # Setup runner
       - name: Setup runner
-        uses: ./.github/actions/setup
+        uses: ./.github/actions/tools
         with:
           github-token: ${{ secrets.github_token }}
 
       # Check formatting
-      - name: Fmt
+      - name: Check formatting
         run: cargo fmt --check

@@ -1,11 +1,12 @@
-name: setup-ubuntu-latest
-description: Setup runner for ubuntu-latest
+name: dbus
+description: dbus
 
 runs:
   using: "composite"
 
   steps:
     - name: Install apt packages
+      if: runner.os == 'Linux'
       uses: daaku/gh-action-apt-install@v4
       with:
         packages: libdbus-1-dev
