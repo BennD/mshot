@@ -1,5 +1,5 @@
-name: tools
-description: Install tools
+name: setup
+description: Setup runner
 
 inputs:
   github-token:
@@ -18,6 +18,9 @@ runs:
     - run: mkdir -p ~/.local
       shell: bash
 
+    # install `screenshots` build dependencies
+    - uses: ./.github/actions/dependencies/screenshots
+
     # Install rust
     - uses: ./.github/actions/tools/rust
       with:
@@ -29,6 +32,3 @@ runs:
       with:
         github-token: ${{ inputs.github-token }}
         create-cache: ${{ inputs.create-cache }}
-
-    # Install dbus
-    - uses: ./.github/actions/tools/dbus

@@ -1,5 +1,5 @@
-name: dbus
-description: dbus
+name: screenshots
+description: Install required build dependencies for the `screenshots` rust crate
 
 runs:
   using: "composite"
