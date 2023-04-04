@@ -30,7 +30,7 @@ jobs:
 
       # Setup runner
       - name: Setup runner
-        uses: ./.github/actions/tools
+        uses: ./.github/actions/setup
         with:
           github-token: ${{ secrets.github_token }}
           create-cache: 'true'
@@ -68,7 +68,7 @@ jobs:
 
       # Setup runner
       - name: Setup runner
-        uses: ./.github/actions/tools
+        uses: ./.github/actions/setup
         with:
           github-token: ${{ secrets.github_token }}
 
@@ -90,7 +90,7 @@ jobs:
 
       # Setup runner
       - name: Setup runner
-        uses: ./.github/actions/tools
+        uses: ./.github/actions/setup
         with:
           github-token: ${{ secrets.github_token }}
 
@@ -112,7 +112,7 @@ jobs:
 
       # Setup runner
       - name: Setup runner
-        uses: ./.github/actions/tools
+        uses: ./.github/actions/setup
         with:
           github-token: ${{ secrets.github_token }}
 
