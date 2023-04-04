@@ -25,18 +25,22 @@ jobs:
 
     steps:
       # Checkout
+      - name: Checkout
       - uses: actions/checkout@v3
 
       # Setup runner
+      - name: Setup runner
       - uses: ./.github/actions/tools
         with:
           github-token: ${{ secrets.github_token }}
           create-cache: 'true'
 
       # Build
+      - name: Build
       - run: cargo build --all --verbose --release
 
       # Upload artifacts
+      - name: Upload artifacts
       - uses: actions/upload-artifact@v3
         with:
           name: ${{ matrix.os }}
@@ -59,14 +63,17 @@ jobs:
 
     steps:
       # Checkout
+      - name: Checkout
       - uses: actions/checkout@v3
 
       # Setup runner
+      - name: Setup runner
       - uses: ./.github/actions/tools
         with:
           github-token: ${{ secrets.github_token }}
 
       # Test
+      - name: Test
       - run: cargo test --all --verbose --release
 
 
@@ -78,14 +85,17 @@ jobs:
 
     steps:
       # Checkout
+      - name: Checkout
       - uses: actions/checkout@v3
 
       # Setup runner
+      - name: Setup runner
       - uses: ./.github/actions/tools
         with:
           github-token: ${{ secrets.github_token }}
 
       # Clippy
+      - name: Clippy
       - run: cargo clippy --all --verbose --release
 
 
@@ -97,12 +107,15 @@ jobs:
 
     steps:
       # Checkout
+      - name: Checkout
       - uses: actions/checkout@v3
 
       # Setup runner
+      - name: Setup runner
       - uses: ./.github/actions/tools
         with:
           github-token: ${{ secrets.github_token }}
 
       # Check formatting
+      - name: Check formatting
       - run: cargo fmt --check
