@@ -32,7 +32,6 @@ jobs:
         with:
           github-token: ${{ secrets.github_token }}
           create-cache: 'true'
-          os: ${{ matrix.os }}
 
       # Build
       - run: cargo build --all --verbose --release
@@ -66,7 +65,6 @@ jobs:
       - uses: ./.github/actions/tools
         with:
           github-token: ${{ secrets.github_token }}
-          os: ${{ matrix.os }}
 
       # Test
       - run: cargo test --all --verbose --release
